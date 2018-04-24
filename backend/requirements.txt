@@ -1,0 +1,15 @@
+asn1crypto==0.24.0
+cffi==1.11.5
+click==6.7
+cryptography==2.2.2
+Flask==0.12.2
+Flask-MySQL==1.4.0
+idna==2.6
+itsdangerous==0.24
+Jinja2==2.10
+MarkupSafe==1.0
+pycparser==2.18
+PyMySQL==0.8.0
+pyOpenSSL==17.5.0
+six==1.11.0
+Werkzeug==0.14.1
