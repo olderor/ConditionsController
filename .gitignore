@@ -11,10 +11,10 @@ pyvenv.cfg
 pip-selfcheck.json
 
 # User-specific stuff
-**/.idea/**/workspace.xml
-**/.idea/**/tasks.xml
-**/.idea/**/dictionaries
-**/.idea/**/shelf
+**/.idea/workspace.xml
+**/.idea/tasks.xml
+**/.idea/dictionaries
+**/.idea/shelf
 
 # Sensitive or high-churn files
 **/.idea/**/dataSources/
@@ -58,3 +58,4 @@ pip-selfcheck.json
 
 # Editor-based Rest Client
 **/.idea/httpRequests
+**/__pycache__/
