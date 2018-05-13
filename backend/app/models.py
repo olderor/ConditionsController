@@ -36,26 +36,9 @@ class PaginatedAPIMixin(object):
         }
         return data
 
-roles = db.relationship('Role', secondary='user_roles')
-
-
-# Define the Role data-model
-class Role(db.Model):
-    __tablename__ = 'roles'
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(50), unique=True)
-
-
-# Define the UserRoles association table
-class UserRoles(db.Model):
-    __tablename__ = 'user_roles'
-    id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey('users.id', ondelete='CASCADE'))
-    role_id = db.Column(db.Integer(), db.ForeignKey('roles.id', ondelete='CASCADE'))
-
 
 class User(UserMixin, PaginatedAPIMixin, db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
@@ -63,7 +46,11 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     token = db.Column(db.String(32), index=True, unique=True)
     token_expiration = db.Column(db.DateTime)
-    roles = db.relationship('UserRoles', lazy='dynamic')
+    role = db.Column(db.String(30))
+
+    @staticmethod
+    def get_by_email(email):
+        return User.query.filter_by(email=email).first()
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -93,7 +80,8 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
         data = {
             'id': self.id,
             'last_seen': self.last_seen.isoformat() + 'Z',
-            'about_me': self.about_me
+            'about_me': self.about_me,
+            'role' : self.role
         }
         if include_email:
             data['email'] = self.email
@@ -106,10 +94,10 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
         if new_user and 'password' in data:
             self.set_password(data['password'])
 
-    def set_roles(self, roles):
-        self.roles = roles
+    def set_role(self, role='client'):
+        self.role = role
 
-    def get_token(self, expires_in=3600):
+    def get_token(self, expires_in=3600000):
         now = datetime.utcnow()
         if self.token and self.token_expiration > now + timedelta(seconds=60):
             return self.token
@@ -134,29 +122,37 @@ def load_user(id):
     return User.query.get(int(id))
 
 
-def create_roles():
-    client_role = Role(name='client')
-    manufacter_role = Role(name='manufacter')
-    admin_role = Role(name='admin')
-    db.session.add(client_role)
-    db.session.add(manufacter_role)
-    db.session.add(admin_role)
+class Organization(PaginatedAPIMixin, db.Model):
+    __tablename__ = 'organization'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(120))
+    about = db.Column(db.String(120))
 
-    db.session.commit()
+
+class Storing(PaginatedAPIMixin, db.Model):
+    __tablename__ = 'storing'
+    id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'))
+    start_date = db.Column(db.DateTime)
+    end_date = db.Column(db.DateTime)
 
 
 class ConditionField(PaginatedAPIMixin, db.Model):
     __tablename__ = 'condition_field'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
+    min_value = db.Column(db.Integer)
+    max_value = db.Column(db.Integer)
 
 
 class TrackingStatus(PaginatedAPIMixin, db.Model):
     __tablename__ = 'tracking_status'
     id = db.Column(db.Integer, primary_key=True)
-    field = db.Column(db.Integer, db.ForeignKey('condition_field.id'))
-    value = db.Column(db.Integer)
+    condition_id = db.Column(db.Integer, db.ForeignKey('condition.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    value = db.Column(db.Integer)
+    date_recordered = db.Column(db.Integer, db.ForeignKey('product.id'))
 
 
 class TrackingDevice(PaginatedAPIMixin, db.Model):
@@ -173,6 +169,10 @@ class Product(PaginatedAPIMixin, db.Model):
     tracking_device_id = db.Column(db.Integer, db.ForeignKey('tracking_device.id'))
     product_type_id = db.Column(db.Integer, db.ForeignKey('product_types.id'))
     statuses = db.relationship('TrackingStatus', lazy='dynamic')
+
+    @staticmethod
+    def products_info():
+        pass
 
 
 class Condition(PaginatedAPIMixin, db.Model):
@@ -191,66 +191,3 @@ class ProductType(PaginatedAPIMixin, db.Model):
     expiration_date_length = db.Column(db.DateTime)
     description = db.Column(db.String(300))
     conditions = db.relationship('Condition', lazy='dynamic')
-
-    def __repr__(self):
-        return '<User {}>'.format(self.username)
-
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-    def get_reset_password_token(self, expires_in=600):
-        return jwt.encode(
-            {'reset_password': self.id, 'exp': time() + expires_in},
-            current_app.config['SECRET_KEY'],
-            algorithm='HS256').decode('utf-8')
-
-    @staticmethod
-    def verify_reset_password_token(token):
-        try:
-            id = jwt.decode(token, current_app.config['SECRET_KEY'],
-                            algorithms=['HS256'])['reset_password']
-        except:
-            return
-        return User.query.get(id)
-
-    def to_dict(self, include_email=False):
-        data = {
-            'id': self.id,
-            'last_seen': self.last_seen.isoformat() + 'Z',
-            'about_me': self.about_me
-        }
-        if include_email:
-            data['email'] = self.email
-        return data
-
-    def from_dict(self, data, new_user=False):
-        for field in ['email', 'about_me']:
-            if field in data:
-                setattr(self, field, data[field])
-        if new_user and 'password' in data:
-            self.set_password(data['password'])
-
-    def set_roles(self, roles):
-        self.roles = roles
-
-    def get_token(self, expires_in=3600):
-        now = datetime.utcnow()
-        if self.token and self.token_expiration > now + timedelta(seconds=60):
-            return self.token
-        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
-        self.token_expiration = now + timedelta(seconds=expires_in)
-        db.session.add(self)
-        return self.token
-
-    def revoke_token(self):
-        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
-
-    @staticmethod
-    def check_token(token):
-        user = User.query.filter_by(token=token).first()
-        if user is None or user.token_expiration < datetime.utcnow():
-            return None
-        return user

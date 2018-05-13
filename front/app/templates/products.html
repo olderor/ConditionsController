@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _(Products) }}{% endblock %}
+
+{% block content %}
+
+<div class="jumbotron d-flex" style="height: -webkit-fill-available;">
+<div class="container">
+<div id="product-template" style="display: none">
+    <table>
+        <tbody>
+            {{each dataItems}}
+            <tr>
+                <td>${name}</td>
+                <td>${type}</td>
+                <td>${condition}</td>
+                <td>${lastActive}</td>
+                <td>${currentOrganization}</td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div>
+    <div id="products-list">
+
+    </div>
+</div>
+</div>
+
+{% endblock %}

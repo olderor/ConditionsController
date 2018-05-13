@@ -41,3 +41,4 @@ pip-selfcheck.json
 
 # Editor-based Rest Client
 **/__pycache__/**
+*.db
