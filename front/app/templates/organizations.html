@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _(Organizations) }}{% endblock %}
+
+{% block content %}
+
+<!-- Add organization modal-->
+<div class="modal fade" id="add-organization" tabindex="-1" role="dialog" aria-labelledby="add-organization-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-organization-label">{{ _('Add new organization') }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert" id="add-organization-error" style="display: none;"></div>
+                <form id="add-organization-form">
+                    <div class="form-group">
+                        <label for="add-organization-name">{{ _('Name') }}</label>
+                        <input type="text" class="form-control" id="add-organization-name" placeholder="{{ _('Enter ogranization name') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-organization-description">{{ _('Description') }}</label>
+                        <textarea class="form-control" id="add-organization-description" placeholder="{{ _('Enter description') }}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-organization-image">{{ _('Image') }}</label>
+                        <input type="text" class="form-control" id="add-organization-image" placeholder="{{ _('Enter link to organization logo.') }}">
+                    </div>
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
+                            {{ _('Add') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/x-jquery-tmpl" id="organization-template">
+    <tr>
+        <td><img src="${image_url}" width="50px" height="50px"></td>
+        <td>${name}</td>
+        <td>${about}</td>
+        <td>
+            {% raw %}
+            {{if disabled}}
+            {% endraw %}
+                <input type="checkbox" class="active-toggle toggle" data-organization-id='${id}' data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+            {% raw %}
+            {{else}}
+            {% endraw %}
+                <input type="checkbox" class="active-toggle toggle" data-organization-id='${id}' checked data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+            {% raw %}
+            {{/if}}
+            {% endraw %}
+        </td>
+        <td>
+            <button type="submit" class="btn btn-primary text-center show-organization-details-button" data-organization-id=${id}>
+                {{ _('Show details') }}
+            </button>
+        </td>
+    </tr>
+</script>
+
+<div class="jumbotron d-flex jcontainer">
+    <div class="container">
+        <div>
+            <h3>
+                {{ _('Organizations in the system.') }}
+                <button type="submit" data-toggle="modal" data-target="#add-organization" class="btn btn-primary" style="margin-left: 20px;">{{ _('Add new organization') }}</button>
+            </h3>
+            <div class="alert alert-danger" role="alert" id="organizations-error" style="display: none;"></div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">{{_('Name')}}</th>
+                        <th scope="col">{{_('Description')}}</th>
+                        <th scope="col">{{_('Active status')}}</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="organizations-list">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+        conditions.organizations.init();
+</script>
+
+{% endblock %}

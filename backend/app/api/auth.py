@@ -1,11 +1,12 @@
 from flask import g
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from app.models import User
-from app.api.errors import error_response
+from app.api.controllers.errors import error_response
 from functools import wraps
 
+
 basic_auth = HTTPBasicAuth()
-token_auth = HTTPTokenAuth()
+token_auth = HTTPTokenAuth('Bearer')
 
 
 @basic_auth.verify_password
@@ -33,13 +34,13 @@ def token_auth_error():
     return error_response(401)
 
 
-def login_required(roles=[]):
+def roled_login_required(roles=[]):
     def wrapper(fn):
         @wraps(fn)
         def decorated_view(*args, **kwargs):
             if g.current_user is None or not g.current_user.is_authenticated:
                return g.current_app.login_manager.unauthorized()
-            urole = g.current_app.login_manager.reload_user().get_urole()
+            urole = g.current_user.role
             if len(roles) == 0 and urole not in roles:
                 return g.current_app.login_manager.unauthorized()
             return fn(*args, **kwargs)

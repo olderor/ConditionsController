@@ -4,11 +4,12 @@
 
 {% block content %}
 
-<div class="jumbotron d-flex" style="height: -webkit-fill-available;">
+<div class="jumbotron d-flex jcontainer">
 <div class="container">
 <div id="product-template" style="display: none">
     <table>
         <tbody>
+        {% raw %}
             {{each dataItems}}
             <tr>
                 <td>${name}</td>
@@ -18,6 +19,7 @@
                 <td>${currentOrganization}</td>
             </tr>
             {{/each}}
+        {% endraw %}
         </tbody>
     </table>
 </div>
@@ -26,5 +28,14 @@
     </div>
 </div>
 </div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+        conditions.products.init();
+</script>
 
 {% endblock %}

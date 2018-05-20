@@ -1,7 +1,7 @@
-from app.users import bp
+from app.products import bp
 from flask import render_template, request
 
 
-@bp.route('/products', methods=['GET'])
-def index():
+@bp.route('/', methods=['GET'])
+def products():
     return render_template('products.html')

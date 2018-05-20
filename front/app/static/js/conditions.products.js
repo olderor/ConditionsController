@@ -2,7 +2,7 @@ var conditions = conditions || {}
 conditions.products = (function () {
 
     function init() {
-        conditions.server.sendRequest('products', 'post', {token: conditions.account.getToken()}, function (response) {
+        conditions.server.sendAuthorizedRequest('products', conditions.account.getToken(), null, function (response) {
             $('#product-template').tmpl(response.products).appendTo('#products-list');
         });
     }

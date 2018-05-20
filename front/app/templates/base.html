@@ -17,22 +17,28 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">{{ _('Home') }}<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="/">{{ _('Home') }}<span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item active signed-in admin-func">
                 <a class="nav-link" href="/products">{{ _('Products') }}<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active signed-in admin-func">
+                <a class="nav-link" href="/organizations">{{ _('Organizations') }}<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active signed-in manager-func">
+                <a class="nav-link" href="#" onclick="conditions.organization.open()">{{ _('Organization') }}<span class="sr-only">(current)</span></a>
             </li>
         </ul>
 
-        <button type="button" class="btn btn-primary" id="signup-button" data-toggle="modal" data-target="#signup" style="margin-right: 20px;">
+        <button type="button" class="btn btn-primary unsigned-in" id="signup-button" data-toggle="modal" data-target="#signup" style="margin-right: 20px;">
             {{ _('Sign up') }}
         </button>
-        <button type="button" class="btn btn-secondary" id="signin-button" data-toggle="modal" data-target="#signin">
+        <button type="button" class="btn btn-secondary unsigned-in" id="signin-button" data-toggle="modal" data-target="#signin">
             {{ _('Sign in') }}
         </button>
         <div id="sign-welcome-template" style="display: none;">{{ _('Welcome') }}</div>
-        <div id="sign-welcome" style="display: none; margin-right: 20px;"></div>
-        <button type="button" class="btn btn-primary" id="signout-button" style="display: none;">
+        <div id="sign-welcome" class="signed-in" style="display: none; margin-right: 20px;"></div>
+        <button type="button" class="btn btn-primary signed-in" id="signout-button" style="display: none;">
                 {{ _('Sign out') }}
         </button>
     </div>
@@ -46,7 +52,8 @@
                 <h5 class="modal-title" id="signinLabel">{{ _('Sign into your account') }}</h5>
             </div>
             <div class="modal-body">
-                <form id="sigin-form">
+                <div class="alert alert-danger" role="alert" id="signin-error" style="display: none;"></div>
+                <form id="signin-form">
                     <div class="form-group">
                         <label for="signin-email">{{ _('Email address') }}</label>
                         <input type="email" class="form-control" id="signin-email" aria-describedby="emailHelp"
@@ -58,10 +65,6 @@
                     <div class="form-group">
                         <label for="signin-password">{{ _('Password') }}</label>
                         <input type="password" class="form-control" id="signin-password" placeholder="Password">
-                    </div>
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="signup-rememberme">
-                        <label class="form-check-label" for="signup-rememberme">{{ _('Remember me?') }}</label>
                     </div>
                     <div class="text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
@@ -75,7 +78,7 @@
 </div>
 
 
-<!-- Sign in modal-->
+<!-- Sign up modal-->
 <div class="modal fade" id="signup" tabindex="-1" role="dialog" aria-labelledby="signupLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -83,7 +86,8 @@
                 <h5 class="modal-title" id="signupLabel">{{ _('Registering') }}</h5>
             </div>
             <div class="modal-body">
-                <form id="sigup-form">
+                <div class="alert alert-danger" role="alert" id="signup-error" style="display: none;"></div>
+                <form id="signup-form">
                     <div class="form-group">
                         <label for="signup-email">{{ _('Email address') }}</label>
                         <input type="email" class="form-control" id="signup-email" aria-describedby="signup-emailHelp"
@@ -93,7 +97,7 @@
                         </small>
                     </div>
                     <div class="form-group">
-                        <label for="signin-password">{{ _('Password') }}</label>
+                        <label for="signup-password">{{ _('Password') }}</label>
                         <input type="password" class="form-control" id="signup-password" placeholder="Password">
                     </div>
                     <div class="text-center" style="margin-top: 10px;">
@@ -117,25 +121,38 @@
 
 {% block scripts %}
 {{ super() }}
+<style type="text/css">
+    .btn-default {
+        background-color: white;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    .jcontainer {
+        margin-bottom: 0;
+        height: 100%;
+        min-height: 100vh;
+    }
+    .btn.toggle {
+        width: 100px !important;
+        height: 38px !important;
+    }
+</style>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script type="text/javascript" src="https://ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.general.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.account.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.products.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.server.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.organization.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.organizations.js') }}"></script>
 {{ moment.include_moment() }}
 {{ moment.lang(g.locale) }}
 <script>
-        function translate(sourceElem, destElem, sourceLang, destLang) {
-            $(destElem).html('<img src="{{ url_for('static', filename='loading.gif') }}">');
-            $.post('/translate', {
-                text: $(sourceElem).text(),
-                source_language: sourceLang,
-                dest_language: destLang
-            }).done(function(response) {
-                $(destElem).text(response['text'])
-            }).fail(function() {
-                $(destElem).text("{{ _('Error: Could not contact server.') }}");
-            });
-        }
-
         conditions.account.init();
 </script>
 {% endblock %}

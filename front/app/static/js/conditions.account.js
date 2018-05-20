@@ -1,41 +1,29 @@
-var conditions = conditions || {}
+var conditions = conditions || {};
 conditions.account = (function () {
 
     function signin(email, password) {
-        conditions.server.sendRequest('login', 'post', {email: email, password: password}, function(response) {
-            if (!response) {
-                // todo: show failed to sign in.
-                return;
-            }
-            if (response.error) {
-                // todo: show error.
-                return;
-            }
-            $.cookie('token', response.token, {
-                path: '/',
-                secure: true
+        conditions.server.sendRequest('login', {email: email, password: password}, function(response) {
+            var signinError = $('#signin-error');
+            conditions.general.processResponse(response, signinError, function(response) {
+                window.localStorage.setItem('token', response.token);
+                window.localStorage.setItem('email', response.email);
+                window.localStorage.setItem('role', response.role);
+                window.localStorage.setItem('organization_id', response.organization_id);
+                conditions.server.sendRequest('login', response, null, 'https://127.0.0.1:5003/');
+                $('#signin').modal('hide');
+                updateButtons();
             });
-            $.cookie('email', email, {
-                path: '/',
-                secure: true
-            });
-            conditions.server.sendRequest('login', 'post', response, null, 'https://127.0.0.1:5003/');
-            $('#signin').modal('hide');
-            updateButtons();
         })
     }
 
     function signup(email, password) {
-        response = conditions.server.sendRequest('signup', 'post', {email: email, password: password});
-        if (!response) {
-            // todo: show failed to sign in.
-            return;
-        }
-        if (response.error) {
-            // todo: show error.
-            return;
-        }
-        // todo: now log in.
+        conditions.server.sendRequest('signup', {email: email, password: password}, function(response) {
+            var signupError = $('#signup-error');
+            conditions.general.processResponse(response, signupError, function(response) {
+                signin(email, password);
+                $('#signup').modal('hide');
+            });
+        });
     }
 
     function isSignedIn() {
@@ -44,43 +32,76 @@ conditions.account = (function () {
     }
 
     function getToken() {
-        return $.cookie('token');
+        return window.localStorage.getItem('token');
     }
 
     function getEmail() {
-        return $.cookie('email');
+        return window.localStorage.getItem('email');
     }
+
+    function isAdmin() {
+        return window.localStorage.getItem('role') === 'admin';
+    }
+
+    function getOrganization() {
+        return window.localStorage.getItem('organization_id');
+    }
+
 
     function updateButtons() {
         $('#sign-welcome').html($('#sign-welcome-template').html() + ', ' + getEmail());
         if (isSignedIn()) {
-            $('#signin-button').hide();
-            $('#signup-button').hide();
-            $('#signout-button').show();
-            $('#sign-welcome').show();
+            $('.signed-in').show();
+            $('.unsigned-in').hide();
+            // $('#signin-button').hide();
+            // $('#signup-button').hide();
+            // $('#signout-button').show();
+            // $('#sign-welcome').show();
         } else {
-            $('#signin-button').show();
-            $('#signup-button').show();
-            $('#signout-button').hide();
-            $('#sign-welcome').hide();
+            // $('#signin-button').show();
+            // $('#signup-button').show();
+            // $('#signout-button').hide();
+            // $('#sign-welcome').hide();
+            $('.signed-in').hide();
+            $('.unsigned-in').show();
+        }
+
+        $('.admin-func').hide();
+        $('.manager-func').hide();
+        if (isSignedIn()) {
+            if (isAdmin()) {
+                $('.admin-func').show();
+            } else {
+                $('.manager-func').show();
+            }
         }
     }
 
     function init() {
-        $('#sigin-form').submit(function(e) {
+        $('#signin-form').submit(function(e) {
             e.preventDefault();
             conditions.account.signin($('#signin-email').val(), $('#signin-password').val());
         });
-        $('#sigup-form').submit(function(e) {
+        $('#signup-form').submit(function(e) {
             e.preventDefault();
             conditions.account.signup($('#signup-email').val(), $('#signup-password').val());
         });
         $('#signout-button').click(function(e) {
-            $.cookie('token', '');
-            $.cookie('email', '');
+            window.localStorage.setItem('token', '');
+            window.localStorage.setItem('email', '');
+            window.localStorage.setItem('organization_id', '');
             updateButtons();
+            window.location.href = '/';
         });
         updateButtons();
+    }
+
+    function changeActiveStatus(user_id, status, errorId) {
+        var data = {'user_id': user_id, 'active': status};
+        conditions.server.sendAuthorizedRequest('change-status', conditions.account.getToken(), data, function (response) {
+            var errorBox = $(errorId);
+            conditions.general.processResponse(response, errorBox);
+        });
     }
 
     return {
@@ -88,6 +109,9 @@ conditions.account = (function () {
         signin: signin,
         signup: signup,
         getToken: getToken,
-        isSignedIn: isSignedIn
+        isSignedIn: isSignedIn,
+        getOrganization: getOrganization,
+        changeActiveStatus: changeActiveStatus,
+        updateButtons: updateButtons
     };
 })();

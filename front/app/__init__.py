@@ -15,15 +15,15 @@ moment = Moment()
 babel = Babel()
 login_manager = LoginManager()
 
+
 def create_app(config_class=Config):
-    app = Flask(__name__, static_url_path='/static')
+    app = Flask(__name__)
     app.config.from_object(config_class)
 
     bootstrap.init_app(app)
     moment.init_app(app)
     babel.init_app(app)
     login_manager.init_app(app)
-
 
     from app.errors import bp as errors_bp
     app.register_blueprint(errors_bp)
@@ -36,6 +36,9 @@ def create_app(config_class=Config):
 
     from app.users import bp as users_bp
     app.register_blueprint(users_bp)
+
+    from app.organizations import bp as organizations_bp
+    app.register_blueprint(organizations_bp)
 
     if not app.debug and not app.testing:
         if app.config['MAIL_SERVER']:

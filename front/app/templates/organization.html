@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _(Organization) }}{% endblock %}
+
+{% block content %}
+
+<!-- Add product type modal-->
+<div class="modal fade" id="add-product-type" tabindex="-1" role="dialog" aria-labelledby="add-product-type-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-product-type-label">{{ _('Add new type of product') }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert" id="add-product-type-error" style="display: none;"></div>
+                <form id="add-product-type-form">
+                    <div class="form-group">
+                        <label for="add-product-type-name">{{ _('Name') }}</label>
+                        <input type="text" class="form-control" id="add-product-type-name" placeholder="{{ _('Enter name of the type') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-product-type-description">{{ _('Description') }}</label>
+                        <textarea class="form-control" id="add-product-type-description" placeholder="{{ _('Enter description') }}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-product-type-image">{{ _('Image') }}</label>
+                        <input type="text" class="form-control" id="add-product-type-image" placeholder="{{ _('Enter link to image that describes this type of product.') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-product-type-expiration-date-length-div">{{ _('Shelf life') }}</label>
+                        <div id="add-product-type-expiration-date-length-div">
+                            <label for="add-product-type-expiration-date-length-years">{{ _('Years') }}</label>
+                            <input type="number" class="form-control" id="add-product-type-expiration-date-length-years" placeholder="{{ _('Enter shelf life years') }}" value="0">
+                            <label for="add-product-type-expiration-date-length-months">{{ _('Months') }}</label>
+                            <input type="number" class="form-control" id="add-product-type-expiration-date-length-months" placeholder="{{ _('Enter shelf life months') }}" value="0">
+                            <label for="add-product-type-expiration-date-length-days">{{ _('Days') }}</label>
+                            <input type="number" class="form-control" id="add-product-type-expiration-date-length-days" placeholder="{{ _('Enter shelf life days') }}" value="0">
+                            <label for="add-product-type-expiration-date-length-hours">{{ _('Hours') }}</label>
+                            <input type="number" class="form-control" id="add-product-type-expiration-date-length-hours" placeholder="{{ _('Enter shelf life hours') }}" value="0">
+                        </div>
+                    </div>
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
+                            {{ _('Add') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Register manager modal-->
+<div class="modal fade" id="register-manager" tabindex="-1" role="dialog" aria-labelledby="register-manager-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="register-manager-label">{{ _('Registering new manager') }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert" id="register-manager-error" style="display: none;"></div>
+                <form id="register-manager-form">
+                    <div class="form-group">
+                        <label for="register-manager-email">{{ _('Email address') }}</label>
+                        <input type="email" class="form-control" id="register-manager-email" aria-describedby="register-manager-emailHelp"
+                               placeholder="{{ _('Enter email') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-manager-password">{{ _('Password') }}</label>
+                        <input type="password" class="form-control" id="register-manager-password" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-manager-name">{{ _('Name') }}</label>
+                        <input type="text" class="form-control" id="register-manager-name" placeholder="{{ _('Enter name of the manager') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-manager-description">{{ _('Description') }}</label>
+                        <textarea class="form-control" id="register-manager-description" placeholder="{{ _('Enter additional info') }}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-manager-image">{{ _('Image') }}</label>
+                        <input type="text" class="form-control" id="register-manager-image" placeholder="{{ _('Enter link to photo of the manager') }}">
+                    </div>
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
+                            {{ _('Register') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-jquery-tmpl" id="product-types-template">
+    <tr>
+        <td><img src="${image_url}" width="50px" height="50px"></td>
+        <td>${name}</td>
+        <td>${description}</td>
+        <td>${expiration_date_length}</td>
+        <td>
+            <button type="submit" class="btn btn-primary text-center show-organization-details-button" data-organization-id=${organization_id} data-product-type-id=${id}>
+                {{ _('Browse conditions') }}
+            </button>
+        </td>
+    </tr>
+</script>
+
+<script type="text/x-jquery-tmpl" id="users-template">
+    <tr>
+        <td><img src="${image_url}" width="50px" height="50px"></td>
+        <td>${name}</td>
+        <td>${email}</td>
+        <td>${description}</td>
+        <td>${last_seen}</td>
+        <td class="admin-func">
+            {% raw %}
+            {{if disabled}}
+            {% endraw %}
+                <input type="checkbox" class="active-user-toggle toggle" data-user-id='${id}' data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+            {% raw %}
+            {{else}}
+            {% endraw %}
+                <input type="checkbox" class="active-user-toggle toggle" data-user-id='${id}' checked data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+            {% raw %}
+            {{/if}}
+            {% endraw %}
+        </td>
+    </tr>
+</script>
+
+<script type="text/x-jquery-tmpl" id="organization-template">
+    <tr>
+        <td><img src="${image_url}" width="50px" height="50px"></td>
+        <td>${name}</td>
+        <td>${about}</td>
+        <td class="admin-func">
+            {% raw %}
+            {{if disabled}}
+            {% endraw %}
+                <input type="checkbox" class="active-toggle toggle" data-organization-id='${id}' data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+            {% raw %}
+            {{else}}
+            {% endraw %}
+                <input type="checkbox" class="active-toggle toggle" data-organization-id='${id}' checked data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+            {% raw %}
+            {{/if}}
+            {% endraw %}
+        </td>
+    </tr>
+</script>
+
+<div class="jumbotron d-flex jcontainer">
+    <div class="container">
+        <h3>
+            {{ _('Organization details.') }}
+        </h3>
+        <div class="alert alert-danger" role="alert" id="organization-error" style="display: none;"></div>
+        <table id="organization-description" class="table"></table>
+        <ul class="nav nav-tabs" id="organization-tab" role="tablist">
+            <li>
+                <a class="nav-link active" id="product-types-tab" data-toggle="tab" href="#product-types" role="tab" aria-controls="product-types" aria-selected="true">{{_('Product types')}}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="users-tab" data-toggle="tab" href="#users" role="tab" aria-controls="users" aria-selected="false">{{_('Users')}}</a>
+            </li>
+            <li>
+                <a class="nav-link" id="products-tab" data-toggle="tab" href="#products" role="tab" aria-controls="products" aria-selected="false">{{_('Products')}}</a>
+            </li>
+            <li>
+                <a class="nav-link" id="devices-tab" data-toggle="tab" href="#devices" role="tab" aria-controls="devices" aria-selected="false">{{_('Devices')}}</a>
+            </li>
+        </ul>
+        <div class="tab-content" id="organization-tab-content">
+            <div class="tab-pane fade show active" id="product-types" role="tabpanel" aria-labelledby="product-types-tab">
+                <div style="margin: 40px;">
+                    <button type="submit" data-toggle="modal" data-target="#add-product-type" class="btn btn-primary">{{ _('Add new type of product') }}</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">{{_('Name')}}</th>
+                            <th scope="col">{{_('Description')}}</th>
+                            <th scope="col">{{_('Shelf life dd.mm.yyyy HH:MM:SS')}}</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-types-list">
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="users" role="tabpanel" aria-labelledby="users-tab">
+                <div style="margin: 40px;" class="admin-func">
+                    <button type="submit" data-toggle="modal" data-target="#register-manager" class="btn btn-primary">{{ _('Add new manager') }}</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">{{_('Name')}}</th>
+                            <th scope="col">{{_('Email')}}</th>
+                            <th scope="col">{{_('Description')}}</th>
+                            <th scope="col">{{_('Last seen')}}</th>
+                            <th scope="col" class="admin-func">{{_('Active status')}}</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-list">
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="products-tab">...</div>
+            <div class="tab-pane fade" id="devices" role="tabpanel" aria-labelledby="devices-tab">...</div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+        conditions.organization.init();
+</script>
+
+{% endblock %}
