@@ -48,7 +48,7 @@ conditions.product_types = (function () {
             var hours = parseInt($('#add-product-type-expiration-date-length-hours').val());
             var expiration_date_length_hours = ((years * 12 + months) * 30 + days) * 24 + hours;
             addProductType(
-                getCurrentOrganizationId(),
+                conditions.organization.getCurrentOrganizationId(),
                 $('#add-product-type-name').val(),
                 $('#add-product-type-description').val(),
                 $('#add-product-type-image').val(),

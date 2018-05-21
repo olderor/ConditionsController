@@ -23,6 +23,10 @@ conditions.products = (function () {
                     }
                 }
                 $('#products-list').html($('#products-template').tmpl(dataItems));
+                $('.browse-product-info-button').click(function () {
+                    conditions.product.open($(this).data('product-id'));
+                });
+                conditions.tracking_device.initAssignDeviceButtons();
             });
         });
     }
@@ -37,33 +41,12 @@ conditions.products = (function () {
         reloadProducts(data)
     }
 
-    function getProductInfo(product_id, onDone) {
-        var data = {'product_id': product_id};
-        conditions.server.sendAuthorizedRequest('product/get', conditions.account.getToken(), data, function (response) {
-            onDone(response);
-        });
-    }
-
-    function getProductId() {
-        return conditions.general.getUrlParameters()['product'];
-    }
-
-    function reloadProductInfo() {
-        getProductInfo(getProductId(), function (response) {
-            var productsError = $('#products-error');
-            conditions.general.processResponse(response, productsError, function (response) {
-                var dataItems = response.product;
-                $('#product-description').html($('#product-template').tmpl([dataItems]));
-            }, false);
-        });
-    }
-
     function open(product_id) {
         window.location.href = '/product?id=' + product_id
     }
 
     function reloadAddProductType() {
-        var addProductTypeBox = $('#add-product-type');
+        var addProductTypeBox = $('#add-product-select-type');
         conditions.product_types.getOrganizationProductTypes(
             conditions.organization.getCurrentOrganizationId(), function (response) {
                 var addProductError = $('#add-product-error');
@@ -78,56 +61,57 @@ conditions.products = (function () {
     }
 
     function reloadAddProductOrganization() {
-        var addOrganizationBox = $('#add-product-organization');
+        var addOrganizationBox = $('#add-product-select-organization');
         conditions.organizations.getOrganizations(function (response) {
                 addOrganizationBox.html();
                 $.each(response.organizations, function(index, item) {
                     addOrganizationBox.append(new Option(item.name, item.id));
                 });
                 addOrganizationBox.val(conditions.organization.getCurrentOrganizationId());
+                addOrganizationBox.change(function () {
+                    window.localStorage.setItem('organization_id', addOrganizationBox.val());
+                    reloadAddProductType();
+                });
                 reloadAddProductType();
             });
     }
+
+    function initAddProductForm(onDone) {
+        $('#add-product-form').submit(function(e) {
+            e.preventDefault();
+            addProduct(
+                $('#add-product-name').val(), $('#add-product-select-type').val(),
+                $('#add-product-select-organization').val(),
+                onDone);
+        });
+    }
+
 
     function initOrganization() {
         reloadProductsByOrganization();
         reloadAddProductOrganization();
 
-        $('#add-product-organization').prop("disabled", true);
-
-        $('#add-product-form').submit(function(e) {
-            e.preventDefault();
-            addProduct(
-                $('#add-product-name').val(), $('#add-product-type').val(),
-                $('#add-product-organization').val(),
-                reloadProductsByOrganization);
-        });
+        $('#add-product-select-organization').prop("disabled", true);
+        initAddProductForm(reloadProductsByOrganization);
+        conditions.tracking_device.initAssignDeviceForm(reloadProductsByOrganization);
     }
 
     function initProductType() {
         reloadProductsByProductType();
         reloadAddProductOrganization();
-        $('#add-product-organization').prop("disabled", true);
-        $('#add-product-type').prop("disabled", true);
+        $('#add-product-select-organization').prop("disabled", true);
+        $('#add-product-select-type').prop("disabled", true);
 
-        $('#add-product-form').submit(function(e) {
-            e.preventDefault();
-            addProduct(
-                $('#add-product-name').val(), $('#add-product-type').val(),
-                $('#add-product-organization').val(),
-                reloadProductsByProductType);
-        });
+        initAddProductForm(reloadProductsByProductType);
+        conditions.tracking_device.initAssignDeviceForm(reloadProductsByProductType);
     }
 
     function init() {
         reloadProducts();
-        $('#add-product-form').submit(function(e) {
-            e.preventDefault();
-            addProduct(
-                $('#add-product-name').val(), $('#add-product-type').val(),
-                $('#add-product-organization').val(),
-                reloadProducts());
-        });
+        reloadAddProductOrganization();
+
+        initAddProductForm(reloadProducts);
+        conditions.tracking_device.initAssignDeviceForm(reloadProducts);
     }
 
     return {

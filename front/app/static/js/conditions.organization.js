@@ -22,11 +22,12 @@ conditions.organization = (function () {
     }
 
     function open(organization_id=getCurrentOrganizationId()) {
-        window.location.href = '/organizations/get?id=' + organization_id;
         window.localStorage.setItem('organization_id', organization_id);
+        window.location.href = '/organizations/get?id=' + organization_id;
     }
 
     function getCurrentOrganizationId() {
+        return window.localStorage.getItem('organization_id');
         var id = conditions.general.getUrlParameters()['id'];
         if (id) {
             return id;

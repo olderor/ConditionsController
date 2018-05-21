@@ -1,12 +1,13 @@
 from flask import g
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
-from app.models import User
+from app.models import User, TrackingDevice
 from app.api.controllers.errors import error_response
 from functools import wraps
 
 
 basic_auth = HTTPBasicAuth()
 token_auth = HTTPTokenAuth('Bearer')
+device_token_auth = HTTPTokenAuth('Bearer')
 
 
 @basic_auth.verify_password
@@ -29,8 +30,20 @@ def verify_token(token):
     return g.current_user is not None
 
 
+@device_token_auth.verify_token
+def verify_device_token(token):
+    device = TrackingDevice.check_token(token) if token else None
+    g.current_device = device
+    return device is not None
+
+
 @token_auth.error_handler
 def token_auth_error():
+    return error_response(401)
+
+
+@device_token_auth.error_handler
+def device_token_auth_error():
     return error_response(401)
 
 

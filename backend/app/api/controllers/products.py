@@ -36,13 +36,24 @@ def add_product():
 
 
 @bp.route('/product/get', methods=['POST'])
-@token_auth.login_required
-@roled_login_required(roles=['manager', 'admin'])
 @required_fields(['product_id'])
 def product_description():
     product = Product.get_product(request.passed_data['product_id'])
     if not product:
         return bad_request(103, _l('product is not found'))
+    response = jsonify({'product': product.serialize(detailed=True, include_statuses=True)})
+    response.status_code = 200
+    return response
+
+
+@bp.route('/product/assign-device', methods=['POST'])
+@token_auth.login_required
+@required_fields(['product_id', 'tracking_device_id'])
+def product_assign_device():
+    product = Product.get_product(request.passed_data['product_id'])
+    if not product:
+        return bad_request(103, _l('product is not found'))
+    product.assign_tracking_device(request.passed_data['tracking_device_id'])
     response = jsonify({'product': product.serialize(detailed=True)})
     response.status_code = 200
     return response

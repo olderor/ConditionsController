@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _(Product type) }}{% endblock %}
+{% block title %}{{ _('Product type') }}{% endblock %}
 
 {% block content %}
 
@@ -43,6 +43,7 @@
 
 <script type="text/x-jquery-tmpl" id="conditions-template">
     <tr>
+        <td>${id}</td>
         <td>${name}</td>
         <td>${description}</td>
         <td>${min_value}</td>
@@ -61,12 +62,31 @@
 
 <script type="text/x-jquery-tmpl" id="products-template">
     <tr>
+        <td class='status-${status}'>${status}</td>
+        <td>${id}</td>
         <td>${name}</td>
         <td>${product_type_name}</td>
+        <td>${date_created}</td>
         <td>${organization_name}</td>
         <td>
-            <button type="submit" class="btn btn-primary text-center browse-tracking-device-button" data-product-id=${id}>
-                {{ _('Manage tracking devices') }}
+        {% raw %}
+        {{if tracking_device_id == ''}}
+        {% endraw %}
+        {{ _('No tracking device') }}
+        <button type="submit" class="btn btn-primary text-center add-tracking-device-button signed-in" data-product-id=${id}>
+            {{ _('Assign') }}
+        </button>
+        {% raw %}
+        {{else}}
+        {% endraw %}
+        ${tracking_device_id}
+        {% raw %}
+        {{/if}}
+        {% endraw %}
+        </td>
+        <td>
+            <button type="submit" class="btn btn-primary text-center browse-product-info-button" data-product-id=${id}>
+                {{ _('More') }}
             </button>
         </td>
     </tr>
@@ -96,6 +116,7 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th scope="col">{{_('Identifier')}}</th>
                                 <th scope="col">{{_('Name')}}</th>
                                 <th scope="col">{{_('Description')}}</th>
                                 <th scope="col">{{_('From (including)')}}</th>
@@ -113,8 +134,11 @@
                     <table class="table">
                         <thead>
                             <tr>
+                                <th scope="col">{{_('Status')}}</th>
+                                <th scope="col">{{_('Identifier')}}</th>
                                 <th scope="col">{{_('Name')}}</th>
                                 <th scope="col">{{_('Product type')}}</th>
+                                <th scope="col">{{_('Created date')}}</th>
                                 <th scope="col">{{_('Organization')}}</th>
                                 <th scope="col">{{_('Tracking device')}}</th>
                                 <th scope="col"></th>

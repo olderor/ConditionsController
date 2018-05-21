@@ -28,11 +28,16 @@
             <li class="nav-item active signed-in manager-func">
                 <a class="nav-link" href="#" onclick="conditions.organization.open()">{{ _('Organization') }}<span class="sr-only">(current)</span></a>
             </li>
+            <li class="nav-item active signed-in" style="padding-left: 40px;">
+                <button type="submit" data-toggle="modal" data-target="#register-device" class="btn btn-primary">{{ _('Register new tracking device') }}</button>
+            </li>
         </ul>
 
+        <!--
         <button type="button" class="btn btn-primary unsigned-in" id="signup-button" data-toggle="modal" data-target="#signup" style="margin-right: 20px;">
             {{ _('Sign up') }}
         </button>
+        -->
         <button type="button" class="btn btn-secondary unsigned-in" id="signin-button" data-toggle="modal" data-target="#signin">
             {{ _('Sign in') }}
         </button>
@@ -64,7 +69,7 @@
                     </div>
                     <div class="form-group">
                         <label for="signin-password">{{ _('Password') }}</label>
-                        <input type="password" class="form-control" id="signin-password" placeholder="Password">
+                        <input type="password" class="form-control" id="signin-password" placeholder="{{ _('Password') }}">
                     </div>
                     <div class="text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
@@ -98,7 +103,7 @@
                     </div>
                     <div class="form-group">
                         <label for="signup-password">{{ _('Password') }}</label>
-                        <input type="password" class="form-control" id="signup-password" placeholder="Password">
+                        <input type="password" class="form-control" id="signup-password" placeholder="{{ _('Password') }}">
                     </div>
                     <div class="text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
@@ -126,16 +131,80 @@
                         <input type="text" class="form-control" id="add-product-name" placeholder="{{ _('Enter product name') }}">
                     </div>
                     <div class="form-group">
-                        <label for="add-product-type">{{ _('Product Type') }}</label>
-                        <select id="add-product-type"></select>
+                        <label for="add-product-select-organization">{{ _('Organization') }}</label>
+                        <select id="add-product-select-organization"></select>
                     </div>
                     <div class="form-group">
-                        <label for="add-product-organization">{{ _('Organization') }}</label>
-                        <select id="add-product-organization"></select>
+                        <label for="add-product-select-type">{{ _('Product Type') }}</label>
+                        <select id="add-product-select-type"></select>
                     </div>
                     <div class="text-center" style="margin-top: 10px;">
                         <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
                             {{ _('Add') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Register device-->
+<div class="modal fade" id="register-device" tabindex="-1" role="dialog" aria-labelledby="register-device-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="register-device-label">{{ _('Registering tracking device') }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert" id="register-device-error" style="display: none;"></div>
+                <form id="register-device-form">
+                    <div class="form-group">
+                        <label for="register-device-key">{{ _('Key #1') }}</label>
+                        <input type="text" class="form-control" id="register-device-key"
+                               placeholder="{{ _('Enter key #1') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-device-password">{{ _('Key #2') }}</label>
+                        <input type="text" class="form-control" id="register-device-password" placeholder="{{ _('Enter key #2') }}">
+                    </div>
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
+                            {{ _('Register') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Register device-->
+<div class="modal fade" id="assign-device" tabindex="-1" role="dialog" aria-labelledby="register-device-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="assign-device-label">{{ _('Assigning tracking device') }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert" id="assign-device-error" style="display: none;"></div>
+                <form id="assign-device-form">
+                    <div class="form-group">
+                        <label for="assign-device-product-id">{{ _('Product identifier') }}</label>
+                        <input type="text" class="form-control" id="assign-device-product-id" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="register-device-key">{{ _('Key #1') }}</label>
+                        <input type="text" class="form-control" id="assign-device-key"
+                               placeholder="{{ _('Enter key #1') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="register-device-password">{{ _('Key #2') }}</label>
+                        <input type="text" class="form-control" id="assign-device-password" placeholder="{{ _('Enter key #2') }}">
+                    </div>
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
+                            {{ _('Assign') }}
                         </button>
                     </div>
                 </form>
@@ -172,6 +241,9 @@
         width: 100px !important;
         height: 38px !important;
     }
+    .status-expired, .status-spoiled {
+        color: red;
+    }
 </style>
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
@@ -186,9 +258,12 @@
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.conditions.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.product_types.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.products.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.product.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.tracking_device.js') }}"></script>
 {{ moment.include_moment() }}
 {{ moment.lang(g.locale) }}
 <script>
         conditions.account.init();
+        conditions.tracking_device.initBase();
 </script>
 {% endblock %}

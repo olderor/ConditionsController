@@ -7,6 +7,13 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from app import db, login
+from dateutil.parser import parse as datetime_parse
+
+
+STATUS_EXPIRED = 'expired'
+STATUS_SPOILED = 'spoiled'
+STATUS_NEW = 'new'
+FAIL_STATUSES = [STATUS_EXPIRED, STATUS_SPOILED]
 
 
 class PaginatedAPIMixin(object):
@@ -117,7 +124,7 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
             return self.token
         self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
         self.token_expiration = now + timedelta(seconds=expires_in)
-        db.session.add(self)
+        db.session.commit()
         return self.token
 
     def revoke_token(self):
@@ -191,15 +198,89 @@ class TrackingStatus(PaginatedAPIMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     condition_id = db.Column(db.Integer, db.ForeignKey('condition.id'))
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'))
+    tracking_device_id = db.Column(db.Integer, db.ForeignKey('tracking_device.id'))
     value = db.Column(db.Integer)
-    date_recordered = db.Column(db.Integer, db.ForeignKey('product.id'))
+    date_recordered = db.Column(db.DateTime)
+
+    @staticmethod
+    def get_statuses_by_product_id(product_id):
+        return list(reversed(TrackingStatus.query.filter_by(product_id=product_id).all()))
+
+    @staticmethod
+    def add_status(data):
+        status = TrackingStatus()
+        status.value = data['value']
+        status.condition_id = data['condition_id']
+        status.product_id = Product.get_product_by_tracking_device(data['tracking_device_id']).id
+        status.tracking_device_id = data['tracking_device_id']
+        status.date_recordered = datetime_parse(data['date_recordered'])
+
+        product = Product.get_product(status.product_id)
+        if product.status not in FAIL_STATUSES:
+            condition = Condition.get_condition(status.condition_id)
+            if condition.max_value and status.value > condition.max_value or \
+                condition.min_value and status.value < condition.min_value:
+                product.status = STATUS_SPOILED
+
+        db.session.add(status)
+        db.session.commit()
+        return status
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'condition_id': self.condition_id,
+            'product_id': self.product_id,
+            'tracking_device_id': self.tracking_device_id,
+            'value': self.value,
+            'date_recordered': self.date_recordered
+        }
 
 
 class TrackingDevice(PaginatedAPIMixin, db.Model):
     __tablename__ = 'tracking_device'
     id = db.Column(db.Integer, primary_key=True)
-    key = db.Column(db.String(120))
-    token = db.Column(db.String(120))
+    key = db.Column(db.String(120), index=True, unique=True)
+    password_hash = db.Column(db.String(120))
+    token = db.Column(db.String(120), index=True, unique=True)
+    token_expiration = db.Column(db.DateTime)
+
+    @staticmethod
+    def get_device(key):
+        return TrackingDevice.query.filter_by(key=key).first()
+
+    @staticmethod
+    def add_device(data):
+        device = TrackingDevice()
+        device.key = data['key']
+        device.set_password(data['password'])
+        db.session.add(device)
+        db.session.commit()
+
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+    def get_token(self, expires_in=3600000):
+        now = datetime.utcnow()
+        if self.token and self.token_expiration and self.token_expiration > now + timedelta(seconds=60):
+            return self.token
+        self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.commit()
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.utcnow() - timedelta(seconds=1)
+
+    @staticmethod
+    def check_token(token):
+        device = TrackingDevice.query.filter_by(token=token).first()
+        if device is None or device.token_expiration < datetime.utcnow():
+            return None
+        return device
 
 
 class Product(PaginatedAPIMixin, db.Model):
@@ -207,13 +288,26 @@ class Product(PaginatedAPIMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'))
-    tracking_device_id = db.Column(db.Integer, db.ForeignKey('tracking_device.id'))
     product_type_id = db.Column(db.Integer, db.ForeignKey('product_types.id'))
+    tracking_device_id = db.Column(db.Integer, db.ForeignKey('tracking_device.id'))
+    date_created = db.Column(db.DateTime)
+    status = db.Column(db.String(120))
     # statuses = db.relationship('TrackingStatus', lazy='dynamic')
+
+    def assign_tracking_device(self, tracking_device_id):
+        previous_product = Product.get_product_by_tracking_device(tracking_device_id)
+        if previous_product:
+            previous_product.tracking_device_id = None
+        self.tracking_device_id = tracking_device_id
+        db.session.commit()
 
     @staticmethod
     def get_products():
         return list(reversed(Product.query.all()))
+
+    @staticmethod
+    def get_product(product_id):
+        return Product.query.filter_by(id=product_id).first()
 
     @staticmethod
     def get_products_by_organization(organization_id):
@@ -224,26 +318,51 @@ class Product(PaginatedAPIMixin, db.Model):
         return list(reversed(Product.query.filter_by(product_type_id=product_type_id).all()))
 
     @staticmethod
+    def get_product_by_tracking_device(tracking_device_id):
+        return Product.query.filter_by(tracking_device_id=tracking_device_id).first()
+
+    @staticmethod
     def add_product(data):
         product = Product()
+        product.status = STATUS_NEW
         product.name = data['name']
         product.organization_id = data['organization_id']
         product.product_type_id = data['product_type_id']
+        product.date_created = datetime.utcnow()
         db.session.add(product)
         db.session.commit()
         return product
 
-    def serialize(self, detailed=False):
+    def check_expiration(self):
+        if self.status not in FAIL_STATUSES:
+            expiration_hours = ProductType.get_product_type(self.product_type_id).expiration_date_length_hours
+            if not self.date_created or not expiration_hours:
+                return
+            expire_date = self.date_created + timedelta(hours=expiration_hours)
+
+            if expire_date <= datetime.utcnow():
+                self.status = STATUS_EXPIRED
+        db.session.commit()
+
+    def serialize(self, detailed=False, include_statuses=False):
+        self.check_expiration()
+
         res = {
             'id': self.id,
             'name': self.name,
             'organization_id': self.organization_id,
             'tracking_device_id': self.tracking_device_id,
-            'product_type_id': self.product_type_id
+            'product_type_id': self.product_type_id,
+            'status': self.status,
+            'date_created': self.date_created
         }
         if detailed:
             res['organization_name'] = Organization.get_organization(self.organization_id).name
             res['product_type_name'] = ProductType.get_product_type(self.product_type_id).name
+
+        if include_statuses:
+            res['tracking_statuses'] = [s.serialize() for s in TrackingStatus.get_statuses_by_product_id(self.id)]
+            res['conditions'] = [c.serialize() for c in Condition.get_conditions(self.product_type_id)]
         return res
 
 
@@ -255,6 +374,10 @@ class Condition(PaginatedAPIMixin, db.Model):
     min_value = db.Column(db.Float)
     max_value = db.Column(db.Float)
     product_type_id = db.Column(db.Integer, db.ForeignKey('product_types.id'))
+
+    @staticmethod
+    def get_condition(condition_id):
+        return Condition.query.filter_by(id=condition_id).first()
 
     @staticmethod
     def get_conditions(product_type_id):
@@ -277,8 +400,8 @@ class Condition(PaginatedAPIMixin, db.Model):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'min_value': self.min_value,
-            'max_value': self.max_value,
+            'min_value': str(self.min_value) if self.min_value is not None else '',
+            'max_value': str(self.max_value) if self.max_value is not None else '',
             'product_type_id': self.product_type_id
         }
 

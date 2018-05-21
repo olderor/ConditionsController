@@ -1,10 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}{{ _(Products) }}{% endblock %}
+{% block title %}{{ _('Product') }}{% endblock %}
 
 {% block content %}
-
-<script type="text/x-jquery-tmpl" id="products-template">
+<script type="text/x-jquery-tmpl" id="product-template">
     <tr>
         <td class='status-${status}'>${status}</td>
         <td>${id}</td>
@@ -16,7 +15,7 @@
         {% raw %}
         {{if tracking_device_id == ''}}
         {% endraw %}
-        {{ _('No tracking device')}}
+        {{ _('No tracking device') }}
         <button type="submit" class="btn btn-primary text-center add-tracking-device-button signed-in" data-product-id=${id}>
             {{ _('Assign') }}
         </button>
@@ -28,11 +27,6 @@
         {{/if}}
         {% endraw %}
         </td>
-        <td>
-            <button type="submit" class="btn btn-primary text-center browse-product-info-button" data-product-id=${id}>
-                {{ _('More') }}
-            </button>
-        </td>
     </tr>
 </script>
 
@@ -40,12 +34,9 @@
     <div class="container">
         <div>
             <h3>
-                {{ _('Products in the system.') }}
+                {{ _('Product information.') }}
             </h3>
-            <div class="alert alert-danger" role="alert" id="products-error" style="display: none;"></div>
-            <div style="margin: 40px;">
-                <button type="submit" data-toggle="modal" data-target="#add-product" class="btn btn-primary" style="margin-left: 20px;">{{ _('Add new product') }}</button>
-            </div>
+            <div class="alert alert-danger" role="alert" id="product-error" style="display: none;"></div>
             <table class="table">
                 <thead>
                     <tr>
@@ -56,10 +47,9 @@
                         <th scope="col">{{_('Created date')}}</th>
                         <th scope="col">{{_('Organization')}}</th>
                         <th scope="col">{{_('Tracking device')}}</th>
-                        <th scope="col"></th>
                     </tr>
                 </thead>
-                <tbody id="products-list">
+                <tbody id="product-description">
                 </tbody>
             </table>
         </div>
@@ -72,7 +62,7 @@
 {{ super() }}
 
 <script>
-        conditions.products.init();
+        conditions.product.init();
 </script>
 
 {% endblock %}

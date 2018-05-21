@@ -153,12 +153,31 @@
 
 <script type="text/x-jquery-tmpl" id="products-template">
     <tr>
+        <td class='status-${status}'>${status}</td>
+        <td>${id}</td>
         <td>${name}</td>
         <td>${product_type_name}</td>
+        <td>${date_created}</td>
         <td>${organization_name}</td>
         <td>
-            <button type="submit" class="btn btn-primary text-center browse-tracking-device-button" data-product-id=${id}>
-                {{ _('Manage tracking devices') }}
+        {% raw %}
+        {{if tracking_device_id == ''}}
+        {% endraw %}
+        {{ _('No tracking device')}}
+        <button type="submit" class="btn btn-primary text-center add-tracking-device-button signed-in" data-product-id=${id}>
+            {{ _('Assign') }}
+        </button>
+        {% raw %}
+        {{else}}
+        {% endraw %}
+        ${tracking_device_id}
+        {% raw %}
+        {{/if}}
+        {% endraw %}
+        </td>
+        <td>
+            <button type="submit" class="btn btn-primary text-center browse-product-info-button" data-product-id=${id}>
+                {{ _('More') }}
             </button>
         </td>
     </tr>
@@ -180,9 +199,6 @@
             </li>
             <li>
                 <a class="nav-link" id="products-tab" data-toggle="tab" href="#products" role="tab" aria-controls="products" aria-selected="false">{{_('Products')}}</a>
-            </li>
-            <li>
-                <a class="nav-link" id="devices-tab" data-toggle="tab" href="#devices" role="tab" aria-controls="devices" aria-selected="false">{{_('Devices')}}</a>
             </li>
         </ul>
         <div class="tab-content" id="organization-tab-content">
@@ -230,8 +246,11 @@
                 <table class="table">
                     <thead>
                         <tr>
+                            <th scope="col">{{_('Status')}}</th>
+                            <th scope="col">{{_('Identifier')}}</th>
                             <th scope="col">{{_('Name')}}</th>
                             <th scope="col">{{_('Product type')}}</th>
+                            <th scope="col">{{_('Created date')}}</th>
                             <th scope="col">{{_('Organization')}}</th>
                             <th scope="col">{{_('Tracking device')}}</th>
                             <th scope="col"></th>
@@ -241,7 +260,6 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="devices" role="tabpanel" aria-labelledby="devices-tab">...</div>
         </div>
     </div>
 </div>

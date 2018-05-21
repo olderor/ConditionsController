@@ -5,22 +5,32 @@
 {% block content %}
 
 <div class="jumbotron d-flex align-items-center jcontainer">
-<div class="container">
-<div class="row justify-content-center">
-    <div class="card text-center" style="min-width: 500px;">
-        <div class="card-body">
-            <form id="get-info">
-                <div class="form-group">
-                    <label for="product-id">{{ _('Product identification number') }}</label>
-                    <input type="text" class="form-control" id="product-id" aria-describedby="product-id-help"
-                           placeholder="{{ _('Enter product identification number') }}">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="card text-center" style="min-width: 500px;">
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert" id="product-error" style="display: none;"></div>
+                    <form id="get-product-info-home">
+                        <div class="form-group">
+                            <label for="product-id">{{ _('Product identification number') }}</label>
+                            <input type="text" class="form-control" id="product-id" aria-describedby="product-id-help"
+                                   placeholder="{{ _('Enter product identification number') }}">
+                        </div>
+                        <button type="submit" class="btn btn-primary">{{ _('Get product info') }}</button>
+                    </form>
                 </div>
-                <button type="submit" class="btn btn-primary">{{ _('Get product info') }}</button>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-</div>
-</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+        conditions.product.initHome();
+</script>
 
 {% endblock %}
