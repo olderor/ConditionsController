@@ -3,17 +3,17 @@ import os
 from logging.handlers import SMTPHandler, RotatingFileHandler
 
 from flask import Flask, request, current_app
-from flask_babel import Babel
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_moment import Moment
+from app.translate import Translator, translate as _l
 
 from config import Config
 
 bootstrap = Bootstrap()
 moment = Moment()
-babel = Babel()
 login_manager = LoginManager()
+Translator.init()
 
 
 def create_app(config_class=Config):
@@ -22,7 +22,6 @@ def create_app(config_class=Config):
 
     bootstrap.init_app(app)
     moment.init_app(app)
-    babel.init_app(app)
     login_manager.init_app(app)
 
     from app.errors import bp as errors_bp
@@ -39,6 +38,9 @@ def create_app(config_class=Config):
 
     from app.organizations import bp as organizations_bp
     app.register_blueprint(organizations_bp)
+
+    from app.product_types import bp as product_types_bp
+    app.register_blueprint(product_types_bp)
 
     if not app.debug and not app.testing:
         if app.config['MAIL_SERVER']:
@@ -75,9 +77,11 @@ def create_app(config_class=Config):
         app.logger.setLevel(logging.INFO)
         app.logger.info('ConditionsController startup')
 
+    app.jinja_env.globals.update(_=_l)
+
     return app
 
 
-@babel.localeselector
+@Translator.localeselector
 def get_locale():
     return request.accept_languages.best_match(current_app.config['LANGUAGES'])

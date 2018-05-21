@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}{{ _(Product type) }}{% endblock %}
+
+{% block content %}
+
+<!-- Add condition modal-->
+<div class="modal fade" id="add-condition" tabindex="-1" role="dialog" aria-labelledby="add-condition-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-condition-label">{{ _('Add new condition') }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert" id="add-condition-error" style="display: none;"></div>
+                <form id="add-condition-form">
+                    <div class="form-group">
+                        <label for="add-condition-name">{{ _('Name') }}</label>
+                        <input type="text" class="form-control" id="add-condition-name" placeholder="{{ _('Enter condition name') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-condition-description">{{ _('Description') }}</label>
+                        <textarea class="form-control" id="add-condition-description" placeholder="{{ _('Enter description') }}"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-condition-min-value">{{ _('From (including)') }}</label>
+                        <input type="number" step="0.0001" class="form-control" id="add-condition-min-value" placeholder="{{ _('Enter condition minimum value') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-condition-max-value">{{ _('To (including)') }}</label>
+                        <input type="number" step="0.0001" class="form-control" id="add-condition-max-value" placeholder="{{ _('Enter condition maximum value') }}">
+                    </div>
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
+                            {{ _('Add') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-jquery-tmpl" id="conditions-template">
+    <tr>
+        <td>${name}</td>
+        <td>${description}</td>
+        <td>${min_value}</td>
+        <td>${max_value}</td>
+    </tr>
+</script>
+
+<script type="text/x-jquery-tmpl" id="product-type-template">
+    <tr>
+        <td><img src="${image_url}" width="50px" height="50px"></td>
+        <td>${name}</td>
+        <td>${description}</td>
+        <td>${expiration_date_length}</td>
+    </tr>
+</script>
+
+<script type="text/x-jquery-tmpl" id="products-template">
+    <tr>
+        <td>${name}</td>
+        <td>${product_type_name}</td>
+        <td>${organization_name}</td>
+        <td>
+            <button type="submit" class="btn btn-primary text-center browse-tracking-device-button" data-product-id=${id}>
+                {{ _('Manage tracking devices') }}
+            </button>
+        </td>
+    </tr>
+</script>
+
+<div class="jumbotron d-flex jcontainer">
+    <div class="container">
+        <div>
+            <h3>
+                {{ _('Conditions for product type.') }}
+            </h3>
+            <div class="alert alert-danger" role="alert" id="product-types-error" style="display: none;"></div>
+            <table id="product-type-description" class="table"></table>
+            <ul class="nav nav-tabs" id="condition-tab" role="tablist">
+                <li>
+                    <a class="nav-link active" id="conditions-tab" data-toggle="tab" href="#conditions" role="tab" aria-controls="conditions" aria-selected="true">{{_('Conditions')}}</a>
+                </li>
+                <li>
+                    <a class="nav-link" id="products-tab" data-toggle="tab" href="#products" role="tab" aria-controls="products" aria-selected="false">{{_('Products')}}</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="conditions-tab-content">
+                <div class="tab-pane fade show active" id="conditions" role="tabpanel" aria-labelledby="conditions-tab">
+                    <div style="margin: 40px;">
+                        <button type="submit" data-toggle="modal" data-target="#add-condition" class="btn btn-primary" style="margin-left: 20px;">{{ _('Add new condition') }}</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">{{_('Name')}}</th>
+                                <th scope="col">{{_('Description')}}</th>
+                                <th scope="col">{{_('From (including)')}}</th>
+                                <th scope="col">{{_('To (including)')}}</th>
+                            </tr>
+                        </thead>
+                        <tbody id="conditions-list">
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="products-tab">
+                    <div style="margin: 40px;">
+                        <button type="submit" data-toggle="modal" data-target="#add-product" class="btn btn-primary" style="margin-left: 20px;">{{ _('Add new product') }}</button>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">{{_('Name')}}</th>
+                                <th scope="col">{{_('Product type')}}</th>
+                                <th scope="col">{{_('Organization')}}</th>
+                                <th scope="col">{{_('Tracking device')}}</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-list">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+
+<script>
+        conditions.conditions.init();
+</script>
+
+{% endblock %}

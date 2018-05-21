@@ -110,6 +110,40 @@
         </div>
     </div>
 </div>
+
+<!-- Add product modal-->
+<div class="modal fade" id="add-product" tabindex="-1" role="dialog" aria-labelledby="add-product-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="add-product-label">{{ _('Add new product') }}</h5>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert" id="add-product-error" style="display: none;"></div>
+                <form id="add-product-form">
+                    <div class="form-group">
+                        <label for="add-product-name">{{ _('Name') }}</label>
+                        <input type="text" class="form-control" id="add-product-name" placeholder="{{ _('Enter product name') }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-product-type">{{ _('Product Type') }}</label>
+                        <select id="add-product-type"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-product-organization">{{ _('Organization') }}</label>
+                        <select id="add-product-organization"></select>
+                    </div>
+                    <div class="text-center" style="margin-top: 10px;">
+                        <button type="submit" class="btn btn-primary text-center" style="margin-top: 40px;">
+                            {{ _('Add') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
 
 {% block content %}
@@ -146,10 +180,12 @@
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.general.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.account.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.products.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.server.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.organization.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/conditions.organizations.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.conditions.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.product_types.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/conditions.products.js') }}"></script>
 {{ moment.include_moment() }}
 {{ moment.lang(g.locale) }}
 <script>

@@ -4,7 +4,7 @@ from app.models import User
 from app.api import bp
 from app.api.controllers.errors import bad_request
 from app.api.auth import roled_login_required, token_auth
-from flask_babel import lazy_gettext as _l
+from app.translate import translate as _l
 from app.api.validators.validator import required_fields
 
 

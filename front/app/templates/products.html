@@ -4,29 +4,44 @@
 
 {% block content %}
 
-<div class="jumbotron d-flex jcontainer">
-<div class="container">
-<div id="product-template" style="display: none">
-    <table>
-        <tbody>
-        {% raw %}
-            {{each dataItems}}
-            <tr>
-                <td>${name}</td>
-                <td>${type}</td>
-                <td>${condition}</td>
-                <td>${lastActive}</td>
-                <td>${currentOrganization}</td>
-            </tr>
-            {{/each}}
-        {% endraw %}
-        </tbody>
-    </table>
-</div>
-    <div id="products-list">
+<script type="text/x-jquery-tmpl" id="products-template">
+    <tr>
+        <td>${name}</td>
+        <td>${product_type_name}</td>
+        <td>${organization_name}</td>
+        <td>
+            <button type="submit" class="btn btn-primary text-center browse-tracking-device-button" data-product-id=${id}>
+                {{ _('Manage tracking devices') }}
+            </button>
+        </td>
+    </tr>
+</script>
 
+<div class="jumbotron d-flex jcontainer">
+    <div class="container">
+        <div>
+            <h3>
+                {{ _('Products in the system.') }}
+            </h3>
+            <div class="alert alert-danger" role="alert" id="products-error" style="display: none;"></div>
+            <div style="margin: 40px;">
+                <button type="submit" data-toggle="modal" data-target="#add-product" class="btn btn-primary" style="margin-left: 20px;">{{ _('Add new product') }}</button>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">{{_('Name')}}</th>
+                        <th scope="col">{{_('Product type')}}</th>
+                        <th scope="col">{{_('Organization')}}</th>
+                        <th scope="col">{{_('Tracking device')}}</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="products-list">
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 </div>
 
 {% endblock %}

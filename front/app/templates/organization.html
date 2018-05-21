@@ -100,7 +100,7 @@
         <td>${description}</td>
         <td>${expiration_date_length}</td>
         <td>
-            <button type="submit" class="btn btn-primary text-center show-organization-details-button" data-organization-id=${organization_id} data-product-type-id=${id}>
+            <button type="submit" class="btn btn-primary text-center browse-conditions-button" data-product-type-id=${id}>
                 {{ _('Browse conditions') }}
             </button>
         </td>
@@ -118,11 +118,11 @@
             {% raw %}
             {{if disabled}}
             {% endraw %}
-                <input type="checkbox" class="active-user-toggle toggle" data-user-id='${id}' data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+                <input type="checkbox" class="active-user-toggle toggle" data-user-id='${id}' data-toggle="toggle" data-on="{{ _('Active') }}" data-off="{{ _('Disabled') }}" data-onstyle="success" data-offstyle="danger">
             {% raw %}
             {{else}}
             {% endraw %}
-                <input type="checkbox" class="active-user-toggle toggle" data-user-id='${id}' checked data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+                <input type="checkbox" class="active-user-toggle toggle" data-user-id='${id}' checked data-toggle="toggle" data-on="{{ _('Active') }}" data-off="{{ _('Disabled') }}" data-onstyle="success" data-offstyle="danger">
             {% raw %}
             {{/if}}
             {% endraw %}
@@ -139,14 +139,27 @@
             {% raw %}
             {{if disabled}}
             {% endraw %}
-                <input type="checkbox" class="active-toggle toggle" data-organization-id='${id}' data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+                <input type="checkbox" class="active-toggle toggle" data-organization-id='${id}' data-toggle="toggle" data-on="{{ _('Active') }}" data-off="{{ _('Disabled') }}" data-onstyle="success" data-offstyle="danger">
             {% raw %}
             {{else}}
             {% endraw %}
-                <input type="checkbox" class="active-toggle toggle" data-organization-id='${id}' checked data-toggle="toggle" data-on="Active" data-off="Disabled" data-onstyle="success" data-offstyle="danger">
+                <input type="checkbox" class="active-toggle toggle" data-organization-id='${id}' checked data-toggle="toggle" data-on="{{ _('Active') }}" data-off="{{ _('Disabled') }}" data-onstyle="success" data-offstyle="danger">
             {% raw %}
             {{/if}}
             {% endraw %}
+        </td>
+    </tr>
+</script>
+
+<script type="text/x-jquery-tmpl" id="products-template">
+    <tr>
+        <td>${name}</td>
+        <td>${product_type_name}</td>
+        <td>${organization_name}</td>
+        <td>
+            <button type="submit" class="btn btn-primary text-center browse-tracking-device-button" data-product-id=${id}>
+                {{ _('Manage tracking devices') }}
+            </button>
         </td>
     </tr>
 </script>
@@ -210,7 +223,24 @@
                     </tbody>
                 </table>
             </div>
-            <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="products-tab">...</div>
+            <div class="tab-pane fade" id="products" role="tabpanel" aria-labelledby="products-tab">
+                <div style="margin: 40px;">
+                    <button type="submit" data-toggle="modal" data-target="#add-product" class="btn btn-primary" style="margin-left: 20px;">{{ _('Add new product') }}</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">{{_('Name')}}</th>
+                            <th scope="col">{{_('Product type')}}</th>
+                            <th scope="col">{{_('Organization')}}</th>
+                            <th scope="col">{{_('Tracking device')}}</th>
+                            <th scope="col"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="products-list">
+                    </tbody>
+                </table>
+            </div>
             <div class="tab-pane fade" id="devices" role="tabpanel" aria-labelledby="devices-tab">...</div>
         </div>
     </div>

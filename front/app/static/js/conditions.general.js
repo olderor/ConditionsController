@@ -1,4 +1,4 @@
-var conditions = conditions || {}
+var conditions = conditions || {};
 conditions.general = (function () {
 
     function processResponse(response, errorBar, onSuccess, shouldHide=true) {

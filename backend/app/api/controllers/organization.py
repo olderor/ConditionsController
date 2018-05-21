@@ -1,10 +1,10 @@
 from flask import jsonify, request
-from app.models import User, Organization, ProductType, Product
+from app.models import User, Organization
 from app.api import bp
 from app.api.auth import roled_login_required, token_auth
 from app.api.validators.validator import required_fields
 from app.api.controllers.errors import bad_request
-from flask_babel import lazy_gettext as _l
+from app.translate import translate as _l
 from app import db
 
 
@@ -36,27 +36,6 @@ def organization_change_status():
     return response
 
 
-@bp.route('/organization/product-types', methods=['POST'])
-@token_auth.login_required
-@roled_login_required(roles=['manager', 'admin'])
-@required_fields(['organization_id'])
-def get_organization_product_types():
-    product_types = ProductType.get_organization_product_types(request.passed_data['organization_id'])
-    response = jsonify({'product_types': [p.serialize() for p in product_types]})
-    response.status_code = 200
-    return response
-
-
-@bp.route('/organization/add-product-type', methods=['POST'])
-@token_auth.login_required
-@roled_login_required(roles=['manager', 'admin'])
-@required_fields(['organization_id', 'expiration_date_length_hours', 'description', 'name', 'image_url'])
-def add_product_type():
-    response = jsonify({'product_type': ProductType.add_product_type(request.passed_data).serialize()})
-    response.status_code = 200
-    return response
-
-
 @bp.route('/organization/users', methods=['POST'])
 @token_auth.login_required
 @roled_login_required(roles=['manager', 'admin'])
@@ -84,25 +63,5 @@ def organization_register():
     db.session.commit()
 
     response = jsonify(user.serialize())
-    response.status_code = 200
-    return response
-
-
-@bp.route('/organization-products', methods=['POST'])
-@token_auth.login_required
-@roled_login_required(roles=['manager', 'admin'])
-@required_fields(['organization_id'])
-def get_organization_products():
-    response = jsonify(Product.get_organization_products(request.passed_data['organization_id']))
-    response.status_code = 200
-    return response
-
-
-@bp.route('/add-product', methods=['POST'])
-@token_auth.login_required
-@roled_login_required(roles=['manager', 'admin'])
-@required_fields(['organization_id', 'product_type_id', 'tracking_device_id', 'name'])
-def add_product():
-    response = jsonify(Product.add_product(request.passed_data))
     response.status_code = 200
     return response

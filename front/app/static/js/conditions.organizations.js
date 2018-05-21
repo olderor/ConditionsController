@@ -1,4 +1,4 @@
-var conditions = conditions || {}
+var conditions = conditions || {};
 conditions.organizations = (function () {
 
     function addOrganization(name, description, image_url) {
@@ -12,8 +12,14 @@ conditions.organizations = (function () {
         });
     }
 
-    function reloadOrgamizations() {
+    function getOrganizations(onDone) {
         conditions.server.sendAuthorizedRequest('organizations', conditions.account.getToken(), null, function (response) {
+            onDone(response);
+        });
+    }
+
+    function reloadOrgamizations() {
+        getOrganizations(function (response) {
             var organizationsError = $('#organizations-error');
             conditions.general.processResponse(response, organizationsError, function(response) {
                 dataItems = response.organizations;
@@ -40,6 +46,7 @@ conditions.organizations = (function () {
     }
 
     return {
-        init: init
+        init: init,
+        getOrganizations: getOrganizations
     };
 })();

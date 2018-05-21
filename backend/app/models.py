@@ -1,14 +1,10 @@
 import base64
 from datetime import datetime, timedelta
-from hashlib import md5
-import json
 import os
 from time import time
 from flask import current_app, url_for
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-import redis
-import rq
 import jwt
 from app import db, login
 
@@ -67,7 +63,7 @@ class User(UserMixin, PaginatedAPIMixin, db.Model):
 
     @staticmethod
     def get_by_organization(organization_id):
-        return User.query.filter_by(organization_id=organization_id).all()
+        return list(reversed(User.query.filter_by(organization_id=organization_id).all()))
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -164,7 +160,7 @@ class Organization(PaginatedAPIMixin, db.Model):
 
     @staticmethod
     def get_organizations():
-        return Organization.query.all()
+        return list(reversed(Organization.query.all()))
 
     @staticmethod
     def get_organization(id):
@@ -217,43 +213,74 @@ class Product(PaginatedAPIMixin, db.Model):
 
     @staticmethod
     def get_products():
-        return Product.query.all()
+        return list(reversed(Product.query.all()))
 
     @staticmethod
-    def get_organization_products(organization_id):
-        return Product.query.filter(organization_id=organization_id)
+    def get_products_by_organization(organization_id):
+        return list(reversed(Product.query.filter_by(organization_id=organization_id).all()))
+
+    @staticmethod
+    def get_products_by_product_type(product_type_id):
+        return list(reversed(Product.query.filter_by(product_type_id=product_type_id).all()))
 
     @staticmethod
     def add_product(data):
         product = Product()
-        product.organization_id = data['organization_id']
         product.name = data['name']
-        product.tracking_device_id = data['tracking_device_id']
+        product.organization_id = data['organization_id']
         product.product_type_id = data['product_type_id']
         db.session.add(product)
         db.session.commit()
         return product
+
+    def serialize(self, detailed=False):
+        res = {
+            'id': self.id,
+            'name': self.name,
+            'organization_id': self.organization_id,
+            'tracking_device_id': self.tracking_device_id,
+            'product_type_id': self.product_type_id
+        }
+        if detailed:
+            res['organization_name'] = Organization.get_organization(self.organization_id).name
+            res['product_type_name'] = ProductType.get_product_type(self.product_type_id).name
+        return res
 
 
 class Condition(PaginatedAPIMixin, db.Model):
     __tablename__ = 'condition'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
-    min_value = db.Column(db.Integer)
-    max_value = db.Column(db.Integer)
+    description = db.Column(db.String(120))
+    min_value = db.Column(db.Float)
+    max_value = db.Column(db.Float)
     product_type_id = db.Column(db.Integer, db.ForeignKey('product_types.id'))
 
     @staticmethod
     def get_conditions(product_type_id):
-        return Condition.query.filter(product_type_id=product_type_id)
+        return list(reversed(Condition.query.filter_by(product_type_id=product_type_id).all()))
 
     @staticmethod
     def add_conditions(data):
         condition = Condition()
         condition.name = data['name']
+        condition.description = data['description']
         condition.product_type_id = data['product_type_id']
         condition.min_value = data['min_value']
         condition.max_value = data['max_value']
+        db.session.add(condition)
+        db.session.commit()
+        return condition
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'min_value': self.min_value,
+            'max_value': self.max_value,
+            'product_type_id': self.product_type_id
+        }
 
 
 class ProductType(PaginatedAPIMixin, db.Model):
@@ -267,12 +294,16 @@ class ProductType(PaginatedAPIMixin, db.Model):
     expiration_date_length_hours = db.Column(db.Integer)
 
     @staticmethod
+    def get_product_type(product_type_id):
+        return ProductType.query.filter_by(id=product_type_id).first()
+
+    @staticmethod
     def get_product_types():
-        return ProductType.query.all()
+        return list(reversed(ProductType.query.all()))
 
     @staticmethod
     def get_organization_product_types(organization_id):
-        return ProductType.query.filter_by(organization_id=organization_id).all()
+        return list(reversed(ProductType.query.filter_by(organization_id=organization_id).all()))
 
     @staticmethod
     def add_product_type(data):

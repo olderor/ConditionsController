@@ -1,4 +1,4 @@
-var conditions = conditions || {}
+var conditions = conditions || {};
 conditions.organization = (function () {
     
     function changeActiveStatus(organization_id, status) {
@@ -6,18 +6,6 @@ conditions.organization = (function () {
         conditions.server.sendAuthorizedRequest('organization/change-status', conditions.account.getToken(), data, function (response) {
             var organizationError = $('#organization-error');
             conditions.general.processResponse(response, organizationError);
-        });
-    }
-
-    function addProductType(organization_id, name, description, image_url, expiration_date_length_hours) {
-        var data = {'name': name, 'description': description, 'image_url': image_url,
-            'expiration_date_length_hours': expiration_date_length_hours, 'organization_id': organization_id};
-        conditions.server.sendAuthorizedRequest('organization/add-product-type', conditions.account.getToken(), data, function (response) {
-            var addProductTypeError = $('#add-product-type-error');
-            conditions.general.processResponse(response, addProductTypeError, function(response) {
-                $('#add-product-type').modal('hide');
-                reloadOrganizationProductTypes();
-            });
         });
     }
 
@@ -34,7 +22,8 @@ conditions.organization = (function () {
     }
 
     function open(organization_id=getCurrentOrganizationId()) {
-        window.location.href = '/organizations/get?id=' + organization_id
+        window.location.href = '/organizations/get?id=' + organization_id;
+        window.localStorage.setItem('organization_id', organization_id);
     }
 
     function getCurrentOrganizationId() {
@@ -52,30 +41,10 @@ conditions.organization = (function () {
         });
     }
 
-    function getOrganizationProductTypes(organization_id, onDone) {
-        var data = {'organization_id': organization_id};
-        conditions.server.sendAuthorizedRequest('organization/product-types', conditions.account.getToken(), data, function (response) {
-            onDone(response);
-        });
-    }
-
     function getOrganizationUsers(organization_id, onDone) {
         var data = {'organization_id': organization_id};
         conditions.server.sendAuthorizedRequest('organization/users', conditions.account.getToken(), data, function (response) {
             onDone(response);
-        });
-    }
-
-    function reloadOrganizationProductTypes() {
-        getOrganizationProductTypes(getCurrentOrganizationId(), function (response) {
-            var organizationError = $('#organization-error');
-            conditions.general.processResponse(response, organizationError, function (response) {
-                var dataItems = response.product_types;
-                for (var i = 0; i < dataItems.length; ++i) {
-                    dataItems[i].expiration_date_length = conditions.general.formatDate(dataItems[i].expiration_date_length_hours);
-                }
-                $('#product-types-list').html($('#product-types-template').tmpl(dataItems));
-            }, false);
         });
     }
 
@@ -111,23 +80,8 @@ conditions.organization = (function () {
     
     function init() {
         reloadOrganizationInfo();
-        reloadOrganizationProductTypes();
+        conditions.product_types.initOrganization();
         reloadOrganizationUsers();
-
-        $('#add-product-type-form').submit(function(e) {
-            e.preventDefault();
-            var years = parseInt($('#add-product-type-expiration-date-length-years').val());
-            var months = parseInt($('#add-product-type-expiration-date-length-months').val());
-            var days = parseInt($('#add-product-type-expiration-date-length-days').val());
-            var hours = parseInt($('#add-product-type-expiration-date-length-hours').val());
-            var expiration_date_length_hours = ((years * 12 + months) * 30 + days) * 24 + hours;
-            addProductType(
-                getCurrentOrganizationId(),
-                $('#add-product-type-name').val(),
-                $('#add-product-type-description').val(),
-                $('#add-product-type-image').val(),
-                expiration_date_length_hours);
-        });
 
         $('#register-manager-form').submit(function(e) {
             e.preventDefault();
@@ -139,12 +93,15 @@ conditions.organization = (function () {
                 $('#register-manager-description').val(),
                 $('#register-manager-image').val());
         });
+
+        conditions.products.initOrganization();
     }
 
     return {
         init: init,
         changeActiveStatus: changeActiveStatus,
         getOrganizationInfo: getOrganizationInfo,
-        open: open
+        open: open,
+        getCurrentOrganizationId: getCurrentOrganizationId
     };
 })();
