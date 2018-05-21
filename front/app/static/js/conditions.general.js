@@ -58,9 +58,16 @@ conditions.general = (function () {
         return '' + days + '.' + months + '.' + years + ' ' + hours + ':00:00';
     }
 
+    function sortByDate(array, field) {
+        array.sort(function(a,b){
+          return new Date(b[field]) - new Date(a[field]);
+        });
+    }
+
     return {
         processResponse: processResponse,
         getUrlParameters: getUrlParameters,
-        formatDate: formatDate
+        formatDate: formatDate,
+        sortByDate: sortByDate
     };
 })();

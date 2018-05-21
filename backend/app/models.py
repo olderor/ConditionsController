@@ -233,7 +233,7 @@ class TrackingStatus(PaginatedAPIMixin, db.Model):
             'product_id': self.product_id,
             'tracking_device_id': self.tracking_device_id,
             'value': self.value,
-            'date_recordered': self.date_recordered
+            'date_recordered': str(self.date_recordered)
         }
 
 
@@ -354,7 +354,7 @@ class Product(PaginatedAPIMixin, db.Model):
             'tracking_device_id': self.tracking_device_id,
             'product_type_id': self.product_type_id,
             'status': self.status,
-            'date_created': self.date_created
+            'date_created': str(self.date_created)
         }
         if detailed:
             res['organization_name'] = Organization.get_organization(self.organization_id).name
