@@ -8,6 +8,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
 from app import db, login
 from dateutil.parser import parse as datetime_parse
+from app.translate import translate as _l
 
 
 STATUS_EXPIRED = 'expired'
@@ -353,7 +354,8 @@ class Product(PaginatedAPIMixin, db.Model):
             'organization_id': self.organization_id,
             'tracking_device_id': self.tracking_device_id,
             'product_type_id': self.product_type_id,
-            'status': self.status,
+            'status_en': self.status,
+            'status': _l(self.status),
             'date_created': str(self.date_created)
         }
         if detailed:

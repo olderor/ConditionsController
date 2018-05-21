@@ -1,0 +1,9 @@
+
+/* Class = "UILabel"; text = "Scan"; ObjectID = "8aM-mu-Noi"; */
+"8aM-mu-Noi.text" = "Scan";
+
+/* Class = "UILabel"; text = "Product info"; ObjectID = "JSK-Iw-ftY"; */
+"JSK-Iw-ftY.text" = "Product info";
+
+/* Class = "UILabel"; text = "No QR code is detected"; ObjectID = "Xh6-29-y5x"; */
+"Xh6-29-y5x.text" = "No QR code is detected";

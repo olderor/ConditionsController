@@ -8,3 +8,5 @@ device is not found
 устройство не найдено
 user is not found
 пользователь не найден
+spoiled
+испорченный

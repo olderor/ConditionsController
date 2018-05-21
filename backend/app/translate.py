@@ -13,15 +13,18 @@ class Translator:
         if not os.path.exists(Translator.__translations_folder_path):
             return
         for filename in os.listdir(Translator.__translations_folder_path):
-            source_language, temp = filename.split('-')
-            dest_language, _ = temp.split('.')
+            if '.' not in filename:
+                continue
+            langs, extension = filename.split('.')
+            if extension != 't':
+                continue
+            source_language, dest_language = langs.split('-')
             Translator.__translations.setdefault(source_language, dict())
             Translator.__translations[source_language].setdefault(dest_language, dict())
             with open(Translator.__translations_folder_path + filename, 'r') as file:
                 lines = file.readlines()
                 for i in range(0, len(lines) - 1, 2):
-                    Translator.__translations[source_language][dest_language].setdefault(lines[i][:-1],
-                                                                                         lines[i + 1][:-1])
+                    Translator.__translations[source_language][dest_language].setdefault(lines[i][:-1], lines[i + 1][:-1])
 
     @staticmethod
     def get_locale():
