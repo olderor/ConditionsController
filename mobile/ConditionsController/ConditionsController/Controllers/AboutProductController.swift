@@ -22,7 +22,7 @@ class AboutProductController: UITableViewController {
     self.dismiss(animated: true, completion: nil)
   }
   
-  var productId: String!
+  var productId: String! = "3"
   var productModel: ProductModel!
   
   
@@ -46,17 +46,45 @@ class AboutProductController: UITableViewController {
     }
     
     statusLabel.text = productModel.status
-    identifierLabel.text = productModel.id
+    if productModel.id != nil {
+      identifierLabel.text = "\(productModel.id!)"
+    }
     nameLabel.text = productModel.name
     productTypeLabel.text = productModel.productTypeName
     createdDateLabel.text = productModel.dateCreated
     organizationLabel.text = productModel.organizationName
-    trackingDeviceLabel.text = productModel.trackingDeviceId
+    if productModel.trackingDeviceId != nil {
+      trackingDeviceLabel.text = "\(productModel.trackingDeviceId!)"
+    }
+    
+    switch productModel.statusEn {
+    case "spoiled", "expired":
+      statusLabel.textColor = UIColor.red
+      break
+    default:
+      break
+    }
   }
   
   func showError(errorMessage: String) {
     let alert = UIAlertController(title: "Error", message: errorMessage, preferredStyle: .alert)
     alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
     present(alert, animated: true, completion: nil)
+  }
+  
+  override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+    if indexPath.row == 7 { //indexPath.row == 3 || todo
+      return indexPath
+    }
+    return nil
+  }
+  
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPath, animated: true)
+    if indexPath.row == 7 {
+      let chartController = self.storyboard?.instantiateViewController(withIdentifier: "conditions") as! ChartController
+      chartController.productModel = productModel
+      self.navigationController?.pushViewController(chartController, animated: true)
+    }
   }
 }

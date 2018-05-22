@@ -4,22 +4,26 @@ PODS:
     - Alamofire (~> 4.1)
     - ObjectMapper (~> 3.0)
   - ObjectMapper (3.1.0)
+  - SwiftChart (1.0.1)
 
 DEPENDENCIES:
   - AlamofireObjectMapper (~> 5.0)
   - ObjectMapper (~> 3.1)
+  - SwiftChart
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - Alamofire
     - AlamofireObjectMapper
     - ObjectMapper
+    - SwiftChart
 
 SPEC CHECKSUMS:
   Alamofire: e4fa87002c137ba2d8d634d2c51fabcda0d5c223
   AlamofireObjectMapper: 5fafc816351cbbc0d486611aaeba7461c0cbad49
   ObjectMapper: 20505058f54e5c3ca69e1d6de9897d152a5369a6
+  SwiftChart: ba767a678d568a5ee22d419e146a0582865e1aff
 
-PODFILE CHECKSUM: 30a384e59a70f0ea900216555ba1588a7ddf2874
+PODFILE CHECKSUM: cfd3b348780695fdce65d76e7bba670bd15829cd
 
 COCOAPODS: 1.5.2

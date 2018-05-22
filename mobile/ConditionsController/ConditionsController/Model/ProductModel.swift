@@ -9,18 +9,18 @@
 import ObjectMapper
 
 class ProductModel: ErrorModel {
-  var id: String!
+  var id: Int!
   var name: String!
-  var organizationId: String!
-  var trackingDeviceId: String!
-  var productTypeId: String!
+  var organizationId: Int!
+  var trackingDeviceId: Int!
+  var productTypeId: Int!
   var statusEn: String!
   var status: String!
   var dateCreated: String!
   var organizationName: String!
   var productTypeName: String!
-  var trackingStatuses: String!
-  var conditions: String!
+  var trackingStatuses: [TrackingStatusModel]!
+  var conditions: [ConditionModel]!
   
   required init?(map: Map){
     super.init(map: map)
