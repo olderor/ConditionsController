@@ -20,6 +20,7 @@ class QRScannerController: UIViewController {
   var videoPreviewLayer: AVCaptureVideoPreviewLayer?
   var qrCodeFrameView: UIView?
   var decodedData: String!
+  var messageText: String!
   
   private let supportedCodeTypes = [AVMetadataObject.ObjectType.upce,
                                     AVMetadataObject.ObjectType.code39,
@@ -37,7 +38,7 @@ class QRScannerController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    messageText = messageLabel.text
     let captureDevice = AVCaptureDevice.default(for: AVMediaType.video)
     
     do {
@@ -112,7 +113,7 @@ extension QRScannerController: AVCaptureMetadataOutputObjectsDelegate {
     // Check if the metadataObjects array is not nil and it contains at least one object.
     if metadataObjects.count == 0 {
       qrCodeFrameView?.frame = CGRect.zero
-      messageLabel.text = "No QR code is detected"
+      messageLabel.text = messageText
       return
     }
     

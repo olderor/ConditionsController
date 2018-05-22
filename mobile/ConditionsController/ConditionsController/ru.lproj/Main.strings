@@ -1,9 +1,51 @@
 
 /* Class = "UILabel"; text = "Scan"; ObjectID = "8aM-mu-Noi"; */
-"8aM-mu-Noi.text" = "Scan";
+"8aM-mu-Noi.text" = "Сканирование";
 
-/* Class = "UILabel"; text = "Product information"; ObjectID = "JSK-Iw-ftY"; */
-"JSK-Iw-ftY.text" = "Product information";
+/* Class = "UILabel"; text = "Product type"; ObjectID = "8mE-uh-Xfi"; */
+"8mE-uh-Xfi.text" = "Тип продукта";
+
+/* Class = "UILabel"; text = "More"; ObjectID = "AYP-eN-nVa"; */
+"AYP-eN-nVa.text" = "Графики хранения";
+
+/* Class = "UILabel"; text = "Name"; ObjectID = "Ed7-dw-c56"; */
+"Ed7-dw-c56.text" = "Название";
+
+/* Class = "UILabel"; text = "Status"; ObjectID = "FAO-f3-Cxa"; */
+"FAO-f3-Cxa.text" = "Статус";
+
+/* Class = "UILabel"; text = "Organization"; ObjectID = "K2O-YA-MQR"; */
+"K2O-YA-MQR.text" = "Изготовитель";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "NtT-4X-ZnN"; */
+"NtT-4X-ZnN.text" = "";
+
+/* Class = "UILabel"; text = "Label"; ObjectID = "RcB-HB-z5u"; */
+"RcB-HB-z5u.text" = "";
+
+/* Class = "UINavigationItem"; title = "Product conditions"; ObjectID = "Tnb-OM-IAw"; */
+"Tnb-OM-IAw.title" = "Условия хранения";
 
 /* Class = "UILabel"; text = "No QR code is detected"; ObjectID = "Xh6-29-y5x"; */
-"Xh6-29-y5x.text" = "No QR code is detected";
+"Xh6-29-y5x.text" = "QR код не обнаружен";
+
+/* Class = "UILabel"; text = "Identifier"; ObjectID = "cSr-1E-SS2"; */
+"cSr-1E-SS2.text" = "Идентификатор";
+
+/* Class = "UIBarButtonItem"; title = "< Back"; ObjectID = "dYD-MY-L6i"; */
+"dYD-MY-L6i.title" = "< Назад";
+
+/* Class = "UITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "eTJ-P8-UzX"; */
+"eTJ-P8-UzX.text" = "";
+
+/* Class = "UILabel"; text = "Created date"; ObjectID = "egx-fU-u5L"; */
+"egx-fU-u5L.text" = "Дата изготовления";
+
+/* Class = "UINavigationItem"; title = "Product information"; ObjectID = "fIO-Fb-m4C"; */
+"fIO-Fb-m4C.title" = "Информация о продукте";
+
+/* Class = "UINavigationItem"; title = "Product Type Info"; ObjectID = "sGZ-Fg-H8i"; */
+"sGZ-Fg-H8i.title" = "Информация о типе продукта";
+
+/* Class = "UILabel"; text = "Tracking device"; ObjectID = "w7p-ah-lbw"; */
+"w7p-ah-lbw.text" = "Устройство отслеживания";

@@ -213,14 +213,16 @@ class TrackingStatus(PaginatedAPIMixin, db.Model):
 
     @staticmethod
     def add_status(data):
+        product = Product.get_product_by_tracking_device(data['tracking_device_id'])
+        if not product:
+            return None
         status = TrackingStatus()
         status.value = data['value']
         status.condition_id = data['condition_id']
-        status.product_id = Product.get_product_by_tracking_device(data['tracking_device_id']).id
+        status.product_id = product.id
         status.tracking_device_id = data['tracking_device_id']
         status.date_recordered = datetime_parse(data['date_recordered'])
 
-        product = Product.get_product(status.product_id)
         if product.status not in FAIL_STATUSES:
             condition = Condition.get_condition(status.condition_id)
             if condition.max_value and status.value > condition.max_value or \

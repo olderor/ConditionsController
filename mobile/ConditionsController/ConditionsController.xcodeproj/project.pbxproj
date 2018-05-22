@@ -38,6 +38,8 @@
 		2877528920B443410019F335 /* TrackingStatusModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingStatusModel.swift; sourceTree = "<group>"; };
 		2877528B20B444770019F335 /* ConditionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConditionModel.swift; sourceTree = "<group>"; };
 		2877528D20B446B00019F335 /* ChartCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartCell.swift; sourceTree = "<group>"; };
+		2877529120B47BD50019F335 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		2877529220B47BD60019F335 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		287DF9FE20B370E5002CB7DF /* Server.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
 		287DFA0220B37BB5002CB7DF /* ErrorModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorModel.swift; sourceTree = "<group>"; };
 		3AC8B10B5269D7E6210BAC9A /* Pods-ConditionsController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConditionsController.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ConditionsController/Pods-ConditionsController.debug.xcconfig"; sourceTree = "<group>"; };
@@ -269,6 +271,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				282A622720B3556A004E33E3 /* Base */,
+				2877529120B47BD50019F335 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -277,6 +280,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				282A622C20B3556A004E33E3 /* Base */,
+				2877529220B47BD60019F335 /* ru */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
