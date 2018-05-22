@@ -27,6 +27,11 @@ conditions.product = (function () {
                     is_chart = true;
                     initChart(dataItems.conditions, dataItems.tracking_statuses);
                 }
+                var qrcode = new QRCode("qrcode", {
+                    text: getCurrentProductId(),
+                    width: 128,
+                    height: 128
+                });
             });
         });
     }

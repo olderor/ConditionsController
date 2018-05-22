@@ -194,3 +194,5 @@ Product identifier
 
 
 
+Open in mobile app
+Открыть в мобильном приложении
