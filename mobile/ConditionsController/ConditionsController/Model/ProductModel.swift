@@ -29,17 +29,17 @@ class ProductModel: ErrorModel {
   override func mapping(map: Map) {
     super.mapping(map: map)
     
-    id <- map["id"]
-    name <- map["name"]
-    organizationId <- map["organization_id"]
-    trackingDeviceId <- map["tracking_device_id"]
-    productTypeId <- map["product_type_id"]
-    statusEn <- map["status_en"]
-    status <- map["status"]
-    dateCreated <- map["date_created"]
-    organizationName <- map["organization_name"]
-    productTypeName <- map["product_type_name"]
-    trackingStatuses <- map["tracking_statuses"]
-    conditions <- map["conditions"]
+    id <- map["product.id"]
+    name <- map["product.name"]
+    organizationId <- map["product.organization_id"]
+    trackingDeviceId <- map["product.tracking_device_id"]
+    productTypeId <- map["product.product_type_id"]
+    statusEn <- map["product.status_en"]
+    status <- map["product.status"]
+    dateCreated <- map["product.date_created"]
+    organizationName <- map["product.organization_name"]
+    productTypeName <- map["product.product_type_name"]
+    trackingStatuses <- map["product.tracking_statuses"]
+    conditions <- map["product.conditions"]
   }
 }

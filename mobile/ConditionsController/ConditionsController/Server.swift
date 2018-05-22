@@ -12,7 +12,7 @@ import AlamofireObjectMapper
 
 class Server
 {
-  static let url = "https://127.0.0.1:5002/api/"
+  static let url = "https://conditions-controller-olderor.c9users.io/api/"
   
   enum Action : String {
     case getProductInfo        = "product/get"
@@ -22,7 +22,7 @@ class Server
     let uri = url + Action.getProductInfo.rawValue
     let params = ["product_id": productId]
     Alamofire.request(uri, method: .post, parameters: params, encoding: JSONEncoding.default, headers: nil)
-      .responseObject(keyPath: "product") { (response: DataResponse<ProductModel>) in
+      .responseObject { (response: DataResponse<ProductModel>) in
         onSuccess(response.result.value)
     }
   }

@@ -21,6 +21,6 @@ class ErrorModel: Mappable {
   }
   
   var successed: Bool {
-    return error != nil
+    return error == nil
   }
 }
