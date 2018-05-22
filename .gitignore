@@ -44,3 +44,4 @@ pip-selfcheck.json
 *.db
 *.xcbkptlist
 *.xcuserstate
+backend/logs
