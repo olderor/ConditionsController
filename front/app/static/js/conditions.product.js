@@ -116,6 +116,9 @@ conditions.product = (function () {
             conditions.server.sendAuthorizedRequest('product/get-tracks', conditions.account.getToken(), tracks_data, function (response) {
                 if (response && !response.error && response.product && response.product.tracking_statuses) {
                     addNewTracks(response.product.tracking_statuses);
+                    $('#product-status-info').html(response.product.status)
+                    $('#product-status-info').removeClass();
+                    $('#product-status-info').addClass('status-' + response.product.status_en);
                 }
             });
         };
