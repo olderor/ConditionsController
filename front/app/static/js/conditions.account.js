@@ -9,7 +9,6 @@ conditions.account = (function () {
                 window.localStorage.setItem('email', response.email);
                 window.localStorage.setItem('role', response.role);
                 window.localStorage.setItem('organization_id', response.organization_id);
-                conditions.server.sendRequest('login', response, null, 'https://127.0.0.1:5003/');
                 $('#signin').modal('hide');
                 updateButtons();
             });
