@@ -47,7 +47,6 @@ class Translator:
         if not dest_language:
             dest_language = 'en'
 
-        print(text, source_language, dest_language)
         if not text:
             return ''
 
