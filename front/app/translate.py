@@ -2,8 +2,8 @@ import json
 import os
 from googletrans import Translator as GTranslator
 
-class Translator:
 
+class Translator:
     __translations_folder_path = "translations/"
     __translations = dict()
     __translator = GTranslator()
@@ -43,12 +43,15 @@ class Translator:
 
     @staticmethod
     def translate(text, source_language, dest_language):
+        if not text:
+            return ''
+
         if dest_language == source_language:
             return text
 
         translation = text
 
-        if source_language in Translator.__translations and\
+        if source_language in Translator.__translations and \
                 dest_language in Translator.__translations[source_language] and \
                 text in Translator.__translations[source_language][dest_language]:
             return Translator.__translations[source_language][dest_language][text]
