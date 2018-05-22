@@ -1,7 +1,7 @@
 product is not found
 продукт не найден
 must include all required fields
-должны включать все обязательные поля
+необходимо указать все обязательные поля
 device is already registered
 устройство уже зарегистрировано
 device is not found
@@ -13,4 +13,4 @@ spoiled
 new
 новый
 expired
-истекший
+срок годности истек

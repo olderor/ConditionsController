@@ -5,19 +5,19 @@ Home
 Products
 Продукты
 Organizations
-организации
+Организации
 Organization
-организация
+Организация
 Sign up
-зарегистрироваться
+Зарегистрироваться
 Sign in
-войти в систему
+Войти в систему
 Welcome
-желанный
+Добро пожаловать
 Sign out
-выход
+Выход
 Sign into your account
-Войдите в свой аккаунт
+Войти в аккаунт
 Email address
 Адрес электронной почты
 Enter email
@@ -27,11 +27,11 @@ We'll never share your email with anyone else.
 Password
 пароль
 Registering
-регистрирующий
+Регистрация
 Add new product
 Добавить новый продукт
 Name
-имя
+Имя (название)
 Enter product name
 Введите название продукта
 Product Type
@@ -47,21 +47,21 @@ Description
 Enter description
 Введите описание
 Image
-Образ
+Изображение
 Enter link to organization logo.
 Введите ссылку на логотип организации.
 Show details
-Показать детали
+Показать больше
 Organizations in the system.
 Организации в системе.
 Active status
 Активный статус
 Welcome to ConditionsController
-Добро пожаловать в УсловияКонтроллер
+Добро пожаловать в ConditionsController
 Active
-активный
+Активный
 Disabled
-Отключено
+Отключен
 Manage tracking devices
 Управление устройствами отслеживания
 Products in the system.
@@ -69,7 +69,7 @@ Products in the system.
 Product type
 Тип продукта
 Tracking device
-Отслеживающие устройство
+Отслеживающее устройство
 Product identification number
 Идентификационный номер продукта
 Enter product identification number
@@ -87,35 +87,35 @@ More
 No tracking device
 Нет устройства слежения
 Assign
-приписывать
+Назначить
 Id
-Я бы
+Идентификатор
 ID
-Я БЫ
+ID
 Identifier
 Идентификатор
 Add new type of product
 Добавить новый тип продукта
 Enter name of the type
-Введите имя типа
+Введите название типа
 Enter link to image that describes this type of product.
 Введите ссылку на изображение, описывающее этот тип продукта.
 Shelf life
 Срок годности
 Years
-лет
+Количество лет
 Enter shelf life years
-Введите срок годности
+Введите количество лет
 Months
-Месяцы
+Количество месяцев
 Enter shelf life months
-Введите месяцы хранения
+Введите количество месяцев
 Days
-дней
+Количество дней
 Enter shelf life days
-Введите срок хранения
+Введите количество дней
 Hours
-часов
+Количество часов
 Enter shelf life hours
 Введите срок хранения
 Registering new manager
@@ -127,51 +127,51 @@ Enter additional info
 Enter link to photo of the manager
 Введите ссылку на фотографию менеджера
 Register
-регистр
+Зарегистрировать
 Browse conditions
-Просмотр условий
+Просмотр условий хранения
 Organization details.
 Сведения об организации.
 Product types
 Типы продуктов
 Users
-пользователей
+Пользователи
 Devices
-приборы
+Устройства
 Shelf life dd.mm.yyyy HH:MM:SS
-Срок годности dd.mm.yyyy HH: MM: SS
+Срок годности dd.mm.yyyy HH:MM:SS
 Add new manager
 Добавить нового менеджера
 Email
 Эл. адрес
 Last seen
-Последние просмотренные
+Последняя активность
 Add new condition
 Добавить новое условие
 Enter condition name
-Введите имя условия
+Введите названия условия
 From (including)
 От (включая)
 Enter condition minimum value
-Введите минимальное значение условия
+Введите минимальное значение
 To (including)
-К (включая)
+До (включая)
 Enter condition maximum value
-Введите максимальное значение условия
+Введите максимальное значение
 Conditions for product type.
-Условия для типа продукта.
+Условия хранения для данного типа продукта.
 Conditions
-условия
+Условия хранения
 Product
 Продукт
 Product information.
 Информация о товаре.
 Status
-Положение дел
+Статус
 Created date
 Дата создания
 Register tracking device
-Устройство отслеживания регистрации
+Регистрация устройства отслеживания
 Register: tracking device
 Регистрация: устройство слежения
 Register new tracking device
