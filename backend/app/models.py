@@ -204,8 +204,12 @@ class TrackingStatus(PaginatedAPIMixin, db.Model):
     date_recordered = db.Column(db.DateTime)
 
     @staticmethod
-    def get_statuses_by_product_id(product_id):
-        return list(reversed(TrackingStatus.query.filter_by(product_id=product_id).all()))
+    def get_statuses_by_product_id(product_id, from_date=None):
+        if not from_date:
+            return list(reversed(TrackingStatus.query.filter_by(product_id=product_id).all()))
+        else:
+            return list(reversed(TrackingStatus.query.filter_by(product_id=product_id)
+                                 .filter(TrackingStatus.date_recordered > from_date).all()))
 
     @staticmethod
     def add_status(data):
@@ -365,6 +369,18 @@ class Product(PaginatedAPIMixin, db.Model):
         if include_statuses:
             res['tracking_statuses'] = [s.serialize() for s in TrackingStatus.get_statuses_by_product_id(self.id)]
             res['conditions'] = [c.serialize() for c in Condition.get_conditions(self.product_type_id)]
+        return res
+
+    def get_statuses(self, from_date):
+        self.check_expiration()
+
+        res = {
+            'id': self.id,
+            'status_en': self.status,
+            'status': _l(self.status),
+            'tracking_statuses': [s.serialize() for s in TrackingStatus.get_statuses_by_product_id(self.id, from_date=from_date)],
+            'conditions': [c.serialize() for c in Condition.get_conditions(self.product_type_id)]
+        }
         return res
 
 

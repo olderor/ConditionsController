@@ -60,7 +60,7 @@ conditions.general = (function () {
 
     function sortByDate(array, field) {
         array.sort(function(a,b){
-          return new Date(b[field]) - new Date(a[field]);
+          return new Date(a[field]) - new Date(b[field]);
         });
     }
 

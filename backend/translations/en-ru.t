@@ -10,3 +10,7 @@ user is not found
 пользователь не найден
 spoiled
 испорченный
+new
+новый
+expired
+истекший

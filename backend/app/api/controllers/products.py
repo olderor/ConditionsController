@@ -5,6 +5,8 @@ from app.api.auth import roled_login_required, token_auth
 from app.api.validators.validator import required_fields
 from app.api.controllers.errors import bad_request
 from app.translate import translate as _l
+from datetime import datetime
+from dateutil import parser
 
 
 @bp.route('/products', methods=['POST'])
@@ -42,6 +44,20 @@ def product_description():
     if not product:
         return bad_request(103, _l('product is not found'))
     response = jsonify({'product': product.serialize(detailed=True, include_statuses=True)})
+    response.status_code = 200
+    return response
+
+
+@bp.route('/product/get-tracks', methods=['POST'])
+@required_fields(['product_id'], optional=['from_date'])
+def product_tracks():
+    from_date = None
+    if 'from_date' in request.passed_data and request.passed_data['from_date']:
+        from_date = parser.parse(request.passed_data['from_date'])
+    product = Product.get_product(request.passed_data['product_id'])
+    if not product:
+        return bad_request(103, _l('product is not found'))
+    response = jsonify({'product': product.get_statuses(from_date)})
     response.status_code = 200
     return response
 

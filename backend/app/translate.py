@@ -43,6 +43,9 @@ class Translator:
 
     @staticmethod
     def translate(text, source_language, dest_language):
+        if not text:
+            return ''
+
         if dest_language == source_language:
             return text
 
