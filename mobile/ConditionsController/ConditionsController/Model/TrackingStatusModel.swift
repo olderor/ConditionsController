@@ -32,7 +32,7 @@ class TrackingStatusModel: ErrorModel {
     dateRecordered <- map["date_recordered"]
     
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "yyyy-MM-dd hh:mm:ss"
+    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSSSS"
     date = dateFormatter.date(from: dateRecordered)!
   }
 }
