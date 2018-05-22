@@ -24,7 +24,8 @@ class Translator:
             with open(Translator.__translations_folder_path + filename, 'r') as file:
                 lines = file.readlines()
                 for i in range(0, len(lines) - 1, 2):
-                    Translator.__translations[source_language][dest_language].setdefault(lines[i][:-1], lines[i + 1][:-1])
+                    Translator.__translations[source_language][dest_language].setdefault(lines[i][:-1],
+                                                                                         lines[i + 1][:-1])
 
     @staticmethod
     def get_locale():
@@ -43,6 +44,10 @@ class Translator:
 
     @staticmethod
     def translate(text, source_language, dest_language):
+        if not dest_language:
+            dest_language = 'en'
+
+        print(text, source_language, dest_language)
         if not text:
             return ''
 
