@@ -1,6 +1,7 @@
 var conditions = conditions || {};
 conditions.server = (function () {
     var server_url = "https://127.0.0.1:5002/api/";
+    // var server_url = "https://conditions-controller-olderor.c9users.io/api/";
 
     function sendRequest(action, data, onDone, url=server_url) {
         console.log(action, data);
