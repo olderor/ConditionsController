@@ -190,3 +190,5 @@ Assigning tracking device
 Назначение устройства слежения
 Product identifier
 Идентификатор продукта
+
+

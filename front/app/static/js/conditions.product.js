@@ -107,8 +107,12 @@ conditions.product = (function () {
     function initHome() {
         $('#get-product-info-home').submit(function (e) {
             e.preventDefault();
-            reloadProductInfo();
-            open($('#product-id').val());
+            getProductInfo($('#product-id').val(), function (response) {
+                var productError = $('#product-error');
+                conditions.general.processResponse(response, productError, function (response) {
+                    open($('#product-id').val());
+                });
+            });
         })
     }
 

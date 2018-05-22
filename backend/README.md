@@ -14,3 +14,11 @@ export FLASK_DEBUG=1
 
 export MAIL_SERVER=localhost
 export MAIL_PORT=8025
+
+
+
+c9
+cd front/back
+sudo pip3 install setuptools --upgrade
+sudo pip3 install -r requirements.txt
++ back delete migrations folder, init db and migrate + upgrade
