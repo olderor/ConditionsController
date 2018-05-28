@@ -63,23 +63,24 @@ class Device:
 
 
 class ServerManager:
-    # host = "https://127.0.0.1:5002"
-    host = "https://conditions-controller-olderor.c9users.io"
+    host = "https://127.0.0.1:5002"
+    # host = "https://conditions-controller-olderor.c9users.io"
 
     @staticmethod
     def send_track(token, condition_id, value, date):
         requests.post(ServerManager.host + '/api/track',
                       json={'condition_id': condition_id, 'value': value, 'date_recordered': str(date)},
-                      headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token})
+                      headers={'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token},
+                      verify=False)
 
     @staticmethod
     def login_device(key, password):
         r = requests.post(ServerManager.host + '/api/login-device',
-                          json={'key': key, 'password': password})
+                          json={'key': key, 'password': password},
+                          verify=False)
         json_data = json.loads(r.text)
         return json_data['token']
 
 
-
-device = Device([{'id': 7, 'min_value': 55, 'max_value': 59}, {'id': 8, 'min_value': 55, 'max_value': 75}], 'a', 'a')
+device = Device([{'id': 12, 'min_value': 55, 'max_value': 59}], 'a', 'a')
 sleep(100)

@@ -1,7 +1,9 @@
 from flask import g
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
-from app.models import User, TrackingDevice
+from app.logic.user import User
+from app.logic.tracking_device import TrackingDevice
 from app.api.controllers.errors import error_response
+from app.api import bp
 from functools import wraps
 
 
@@ -45,6 +47,10 @@ def token_auth_error():
 @device_token_auth.error_handler
 def device_token_auth_error():
     return error_response(401)
+
+
+def bproute(route):
+    return bp.route(route, methods=['POST'])
 
 
 def roled_login_required(roles=[]):

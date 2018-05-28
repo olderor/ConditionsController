@@ -51,7 +51,7 @@ conditions.products = (function () {
             conditions.organization.getCurrentOrganizationId(), function (response) {
                 var addProductError = $('#add-product-error');
                 conditions.general.processResponse(response, addProductError, function (response) {
-                    addProductTypeBox.html();
+                    addProductTypeBox.html('');
                     $.each(response.product_types, function (index, item) {
                         addProductTypeBox.append(new Option(item.name, item.id));
                     });
@@ -63,7 +63,7 @@ conditions.products = (function () {
     function reloadAddProductOrganization() {
         var addOrganizationBox = $('#add-product-select-organization');
         conditions.organizations.getOrganizations(function (response) {
-                addOrganizationBox.html();
+                addOrganizationBox.html('');
                 $.each(response.organizations, function(index, item) {
                     addOrganizationBox.append(new Option(item.name, item.id));
                 });

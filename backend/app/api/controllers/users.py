@@ -1,14 +1,14 @@
 from flask import jsonify, request, g
 from app import db
-from app.models import User
-from app.api import bp
+from app.logic.user import User
+from app.api.auth import bproute
 from app.api.controllers.errors import bad_request
 from app.api.auth import roled_login_required, token_auth
 from app.translate import translate as _l
 from app.api.validators.validator import required_fields
 
 
-@bp.route('/login', methods=['POST'])
+@bproute('/login')
 @required_fields(['email', 'password'])
 def login():
     user = User.get_by_email(request.passed_data['email'])
@@ -21,7 +21,7 @@ def login():
     return jsonify({'token': token, 'role': user.role, 'email': user.email, 'organization_id': user.organization_id})
 
 
-@bp.route('/signup', methods=['POST'])
+@bproute('/signup')
 @required_fields(['email', 'password'])
 def signup():
     if User.get_by_email(request.passed_data['email']):
@@ -38,7 +38,7 @@ def signup():
     return response
 
 
-@bp.route('/register', methods=['POST'])
+@bproute('/register')
 @token_auth.login_required
 @roled_login_required(roles=['admin'])
 @required_fields(['email', 'password'])
@@ -58,7 +58,7 @@ def register():
     return response
 
 
-@bp.route('/change-status', methods=['POST'])
+@bproute('/change-status')
 @token_auth.login_required
 @roled_login_required(roles=['admin'])
 @required_fields(['user_id', 'active'])

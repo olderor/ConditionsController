@@ -1,15 +1,14 @@
 from flask import jsonify, request, g
-from app.models import Product
-from app.api import bp
+from app.logic.product import Product
+from app.api.auth import bproute
 from app.api.auth import roled_login_required, token_auth
 from app.api.validators.validator import required_fields
 from app.api.controllers.errors import bad_request
 from app.translate import translate as _l
-from datetime import datetime
 from dateutil import parser
 
 
-@bp.route('/products', methods=['POST'])
+@bproute('/products')
 @token_auth.login_required
 @roled_login_required(roles=['manager', 'admin'])
 @required_fields([], optional=['organization_id', 'product_type_id'])
@@ -27,7 +26,7 @@ def get_products():
     return response
 
 
-@bp.route('/add-product', methods=['POST'])
+@bproute('/add-product')
 @token_auth.login_required
 @roled_login_required(roles=['manager', 'admin'])
 @required_fields(['name', 'organization_id', 'product_type_id'])
@@ -37,7 +36,7 @@ def add_product():
     return response
 
 
-@bp.route('/product/get', methods=['POST'])
+@bproute('/product/get')
 @required_fields(['product_id'])
 def product_description():
     product = Product.get_product(request.passed_data['product_id'])
@@ -48,7 +47,7 @@ def product_description():
     return response
 
 
-@bp.route('/product/get-tracks', methods=['POST'])
+@bproute('/product/get-tracks')
 @required_fields(['product_id'], optional=['from_date'])
 def product_tracks():
     from_date = None
@@ -62,7 +61,7 @@ def product_tracks():
     return response
 
 
-@bp.route('/product/assign-device', methods=['POST'])
+@bproute('/product/assign-device')
 @token_auth.login_required
 @required_fields(['product_id', 'tracking_device_id'])
 def product_assign_device():

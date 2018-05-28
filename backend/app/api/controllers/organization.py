@@ -1,6 +1,7 @@
 from flask import jsonify, request
-from app.models import User, Organization
-from app.api import bp
+from app.logic.user import User
+from app.logic.organization import Organization
+from app.api.auth import bproute
 from app.api.auth import roled_login_required, token_auth
 from app.api.validators.validator import required_fields
 from app.api.controllers.errors import bad_request
@@ -8,7 +9,7 @@ from app.translate import translate as _l
 from app import db
 
 
-@bp.route('/organization/get', methods=['POST'])
+@bproute('/organization/get')
 @token_auth.login_required
 @roled_login_required(roles=['admin'])
 @required_fields(['organization_id'])
@@ -21,7 +22,7 @@ def organization_description():
     return response
 
 
-@bp.route('/organization/change-status', methods=['POST'])
+@bproute('/organization/change-status')
 @token_auth.login_required
 @roled_login_required(roles=['admin'])
 @required_fields(['organization_id', 'active'])
@@ -36,7 +37,7 @@ def organization_change_status():
     return response
 
 
-@bp.route('/organization/users', methods=['POST'])
+@bproute('/organization/users')
 @token_auth.login_required
 @roled_login_required(roles=['manager', 'admin'])
 @required_fields(['organization_id'])
@@ -47,7 +48,7 @@ def organization_users():
     return response
 
 
-@bp.route('/organization/register', methods=['POST'])
+@bproute('/organization/register')
 @token_auth.login_required
 @roled_login_required(roles=['admin'])
 @required_fields(['email', 'password', 'organization_id', 'name', 'image_url', 'description'])

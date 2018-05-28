@@ -1,4 +1,3 @@
-import json
 import os
 from googletrans import Translator as GTranslator
 

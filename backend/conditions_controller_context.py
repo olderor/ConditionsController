@@ -1,5 +1,5 @@
 from app import create_app, db
-from app.models import User
+from app.logic.user import User
 from flask import g, jsonify
 from flask_login import current_user
 from datetime import datetime

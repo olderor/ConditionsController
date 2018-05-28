@@ -1,13 +1,13 @@
 from flask import jsonify, request
-from app.models import ProductType
-from app.api import bp
+from app.logic.product_type import ProductType
+from app.api.auth import bproute
 from app.api.auth import roled_login_required, token_auth
 from app.api.validators.validator import required_fields
 from app.api.controllers.errors import bad_request
 from app.translate import translate as _l
 
 
-@bp.route('/product-types', methods=['POST'])
+@bproute('/product-types')
 @token_auth.login_required
 @roled_login_required(roles=['manager', 'admin'])
 @required_fields(['organization_id'])
@@ -18,7 +18,7 @@ def get_organization_product_types():
     return response
 
 
-@bp.route('/add-product-type', methods=['POST'])
+@bproute('/add-product-type')
 @token_auth.login_required
 @roled_login_required(roles=['manager', 'admin'])
 @required_fields(['organization_id', 'expiration_date_length_hours', 'description', 'name', 'image_url'])
@@ -28,7 +28,7 @@ def add_product_type():
     return response
 
 
-@bp.route('/product-type/get', methods=['POST'])
+@bproute('/product-type/get')
 @token_auth.login_required
 @roled_login_required(roles=['manager', 'admin'])
 @required_fields(['product_type_id'])

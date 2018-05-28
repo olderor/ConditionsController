@@ -1,13 +1,15 @@
 from flask import jsonify, request, g
-from app.models import TrackingDevice, Product, TrackingStatus
-from app.api import bp
+from app.logic.tracking_device import TrackingDevice
+from app.logic.product import Product
+from app.logic.tracking_status import TrackingStatus
+from app.api.auth import bproute
 from app.api.controllers.errors import bad_request
 from app.api.auth import roled_login_required, token_auth, device_token_auth
 from app.translate import translate as _l
 from app.api.validators.validator import required_fields, Validator
 
 
-@bp.route('/login-device', methods=['POST'])
+@bproute('/login-device')
 @required_fields(['key', 'password'])
 def login_device():
     device = TrackingDevice.get_device(request.passed_data['key'])
@@ -18,7 +20,7 @@ def login_device():
     return jsonify({'token': token})
 
 
-@bp.route('/register-device', methods=['POST'])
+@bproute('/register-device')
 @token_auth.login_required
 @roled_login_required(roles=['admin', 'manager'])
 @required_fields(['key', 'password'])
@@ -33,7 +35,7 @@ def register_device():
     return response
 
 
-@bp.route('/assign-device', methods=['POST'])
+@bproute('/assign-device')
 @token_auth.login_required
 @roled_login_required(roles=['admin', 'manager'])
 @required_fields(['key', 'password', 'product_id'])
@@ -50,7 +52,7 @@ def assign_device():
     return response
 
 
-@bp.route('/track', methods=['POST'])
+@bproute('/track')
 @device_token_auth.login_required
 @required_fields(['value', 'condition_id', 'date_recordered'])
 def track_status():
@@ -61,7 +63,7 @@ def track_status():
     return response
 
 
-@bp.route('/tracks', methods=['POST'])
+@bproute('/tracks')
 @device_token_auth.login_required
 @required_fields(['tracks'])
 def track_statuses():
