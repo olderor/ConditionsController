@@ -65,7 +65,7 @@ six==1.11.0
 stevedore==0.14.1
 typing==3.5.3.0
 unicode==2.6
-urllib3==1.7.1
+urllib3==1.26.5
 virtualenv==1.11.4
 virtualenv-clone==0.2.4
 virtualenvwrapper==4.1.1
